@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, SectionList, StyleSheet, Text, View } from 'react-native';
+import { Header } from 'react-navigation';
 import Board from './Board';
 import {
   GAME_IDLE,
@@ -12,6 +13,10 @@ import Utils from '../utils/Utils';
 
 export default class Game extends Component {
 
+  static navigationOptions = {
+    gesturesEnabled: false,
+  };
+
   constructor(props) {
     super(props);
 
@@ -19,6 +24,7 @@ export default class Game extends Component {
 
     this.state = {
       gameState: GAME_IDLE,
+      level: 0,
       moves: 0,
       dialogOpen: false,
     };
@@ -45,18 +51,23 @@ export default class Game extends Component {
   // generateTiles(numbers, gridSize, tileSize) {
   // }
 
-  // isGameOver(tiles) {
-  //   const correctedTiles = tiles.filter(tile => {
-  //     return tile.tileId + 1 === tile.number;
-  //   });
+  countMoves = () => {
+    this.setState((prevState) => ({
+      moves: prevState.moves + 1,
+    }));
+  }
 
-  //   if (correctedTiles.length === (this.props.gridSize) ** 2) {
-  //     clearInterval(this.timerId);
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  handleGameOver = () => {
+    storage.save({
+      key: 'level',  // 注意:请不要在key中使用_下划线符号!
+      data: { 
+        level: level,
+      },
+      // 如果不指定过期时间，则会使用defaultExpires参数
+      // 如果设为null，则永不过期
+      expires: null
+    });
+  }
 
   // addTimer() {
   //   this.setState(prevState => {
@@ -106,9 +117,20 @@ export default class Game extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.moves}>{this.state.moves}</Text>
+          <Button
+            onPress={() => this.props.navigation.goBack()}
+            title="Dismiss"
+          />
+          <View style={styles.score}>
+            <Text>Level</Text>
+            <Text style={styles.moves}>{this.state.level}</Text>
+          </View>
+          <View style={styles.score}>
+            <Text>Move</Text>
+            <Text style={styles.moves}>{this.state.moves}</Text>
+          </View>
         </View>
-        <Board headerHeight={HEADER_HEIGHT} />
+        <Board headerHeight={HEADER_HEIGHT} countMoves={this.countMoves}/>
         <View style={styles.footer} />
       </View>
     );
@@ -124,10 +146,10 @@ export default class Game extends Component {
 //   seconds: PropTypes.number,
 // };
 
-// Game.defaultProps = {
-//   moves: 0,
-//   seconds: 0,
-// };
+Game.defaultProps = {
+  level: 0,
+  moves: 0,
+};
 
 const HEADER_HEIGHT = 200;
 const styles = StyleSheet.create({
@@ -137,8 +159,13 @@ const styles = StyleSheet.create({
   header: {
     height: HEADER_HEIGHT,
     backgroundColor: Utils.colors.themeBackgroundColor,
+    flexDirection: 'row',
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
+  },
+  score: {
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   moves: {
     fontSize: 24,

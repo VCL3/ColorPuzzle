@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../actions/index';
 import { Button, SectionList, StyleSheet, Text, View, PanResponder, LayoutAnimation, Alert } from 'react-native';
+import { Header } from 'react-navigation';
 import Tile from './Tile';
 import Utils from '../utils/Utils'
 import ColorEngine from '../utils/ColorEngine';
@@ -117,6 +118,8 @@ class Board extends Component {
         this.setState({
           colors: this.colorEngine.currentColorArray,
         });
+        // Update moves in Game
+        this.props.countMoves();
       }
 
       // Reset the moved tile

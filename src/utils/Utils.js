@@ -4,6 +4,10 @@ import Dimensions from 'Dimensions';
 
 const isBorderTile = index => (index < Utils.tileCount) || (index > (Utils.tileCount * (Utils.tileCount - 1))) || (index % Utils.tileCount == 0) || (index % Utils.tileCount == Utils.tileCount - 1);
 const isCrossTile = index => (index % Utils.tileCount === Math.floor(Utils.tileCount / 2)) || (Math.floor(index / Utils.tileCount) === Math.floor(Utils.tileCount / 2));
+const getOrientation = () => {
+  const { width, height } = Dimensions.get('window');
+  return width > height ? LANDSCAPE : PORTRAIT;
+}
 
 const Utils = {
   ratio: PixelRatio.get(),
@@ -12,6 +16,7 @@ const Utils = {
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height
   },
+  getOrientation: getOrientation, 
   tileCount: 7,
   post(url, data, callback) {
     const fetchOptions = {

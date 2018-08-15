@@ -17,8 +17,8 @@ const indexReducer = (state = dataState, action) => {
   };
 
 // Combine all the reducers
-const rootReducer = combineReducers({
+const AppReducer = combineReducers({
   indexReducer,
 });
 
-export default rootReducer;
+export default AppReducer;

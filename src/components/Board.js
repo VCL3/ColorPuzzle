@@ -9,7 +9,7 @@ import Utils from '../utils/Utils'
 import ColorEngine from '../utils/ColorEngine';
 import tinycolor from 'tinycolor2';
 
-class Board extends Component {
+export default class Board extends Component {
 
   constructor(props) {
     super(props);
@@ -119,12 +119,7 @@ class Board extends Component {
           colors: this.colorEngine.currentColorArray,
         });
         // Update moves in Game
-        this.props.countMoves();
-        store.dispatch(
-          {
-            type: 'ADD_MOVE',
-          }
-        )
+        this.props.addMove();
       }
 
       // Reset the moved tile
@@ -143,7 +138,7 @@ class Board extends Component {
           'Win!',
           'You win the game!',
           [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
+            {text: 'OK', onPress: () => this.props.handleGameWin()},
             // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
           ],
           { cancelable: false }
@@ -195,22 +190,6 @@ class Board extends Component {
     );
   }
 }
-
-// Map the state of the redux store to the component props
-function mapStateToProps(state, props) {
-  return {
-    moves: state.moves,
-  }
-}
-
-// Doing this merges our actions into the component’s props,
-// while wrapping them in dispatch() so that they immediately dispatch an Action.
-// Just by doing this, we will have access to the actions defined in out actions file (action/home.js)
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(Actions, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Board);
 
 const WIDTH = Utils.size.width / Utils.tileCount;
 const styles = StyleSheet.create({

@@ -20,7 +20,6 @@ class Game extends Component {
 
   constructor(props) {
     super(props);
-
     // const { numbers, tileSize, gridSize, moves, seconds } = props;
 
     this.state = {
@@ -34,82 +33,28 @@ class Game extends Component {
   // componentWillReceiveProps(nextProps) {
   //   const { tileSize, gridSize } = this.props;
   //   const newTiles = this.generateTiles(nextProps.numbers, gridSize, tileSize);
-  //   this.setState({
-  //     gameState: GAME_IDLE,
-  //     tiles: newTiles,
-  //     moves: 0,
-  //     seconds: 0,
-  //   });
-  //   clearInterval(this.timerId);
   // }
-
-  // handleDialogClose = () => {
-  //   this.setState({
-  //     dialogOpen: false,
-  //   });
-  // };
 
   // generateTiles(numbers, gridSize, tileSize) {
   // }
 
-  countMoves = () => {
-    this.setState((prevState) => ({
-      moves: prevState.moves + 1,
-    }));
+  handleGameWin = () => {
+    // Update level
+    this.props.addLevel();
+    // storage.save({
+    //   key: 'level',  // 注意:请不要在key中使用_下划线符号!
+    //   data: { 
+    //     level: level,
+    //   },
+    //   // 如果不指定过期时间，则会使用defaultExpires参数
+    //   // 如果设为null，则永不过期
+    //   expires: null
+    // });
   }
-
-  handleGameOver = () => {
-    storage.save({
-      key: 'level',  // 注意:请不要在key中使用_下划线符号!
-      data: { 
-        level: level,
-      },
-      // 如果不指定过期时间，则会使用defaultExpires参数
-      // 如果设为null，则永不过期
-      expires: null
-    });
-  }
-
-  // addTimer() {
-  //   this.setState(prevState => {
-  //     return { seconds: prevState.seconds + 1 };
-  //   });
-  // }
-
-  // setTimer() {
-  //   this.timerId = setInterval(
-  //     () => {
-  //       this.addTimer();
-  //     },
-  //     1000,
-  //   );
-  // }
-
-  // onPauseClick = () => {
-  //   this.setState(prevState => {
-  //     let newGameState = null;
-  //     let newSnackbarText = null;
-
-  //     if (prevState.gameState === GAME_STARTED) {
-  //       clearInterval(this.timerId);
-  //       newGameState = GAME_PAUSED;
-  //       newSnackbarText = 'The game is currently paused.';
-  //     } else {
-  //       this.setTimer();
-  //       newGameState = GAME_STARTED;
-  //       newSnackbarText = 'Game on!';
-  //     }
-
-  //     return {
-  //       gameState: newGameState,
-  //       snackbarOpen: true,
-  //       snackbarText: newSnackbarText,
-  //     };
-  //   });
-  // };
 
   render() {
-    const { className } = this.props;
+    console.log("Render-Game");
+    const { level, moves, addLevel, addMove, clearMove } = this.props;
 
     // const actions = [
     //   <FlatButton label="Close" onTouchTap={this.handleDialogClose} />,
@@ -119,19 +64,22 @@ class Game extends Component {
       <View style={styles.container}>
         <View style={styles.header}>
           <Button
-            onPress={() => this.props.navigation.goBack()}
+            onPress={() => {
+              clearMove();
+              this.props.navigation.goBack();
+            }}
             title="Dismiss"
           />
           <View style={styles.score}>
             <Text>Level</Text>
-            <Text style={styles.moves}>{this.state.level}</Text>
+            <Text style={styles.moves}>{level}</Text>
           </View>
           <View style={styles.score}>
             <Text>Move</Text>
-            <Text style={styles.moves}>{store.getState().moves}</Text>
+            <Text style={styles.moves}>{moves}</Text>
           </View>
         </View>
-        <Board headerHeight={HEADER_HEIGHT} countMoves={this.countMoves}/>
+        <Board headerHeight={HEADER_HEIGHT} addMove={addMove} handleGameWin={this.handleGameWin} />
         <View style={styles.footer} />
       </View>
     );
@@ -139,16 +87,28 @@ class Game extends Component {
 }
 
 function mapStateToProps(state, props) {
+  console.log(state);
   return {
-    moves: state.moves,
+    level: state.gameReducer.level,
+    moves: state.gameReducer.moves,
   }
 }
 
 function mapDispatchToProps(dispatch, props) {
   return {
+    addLevel: () => {
+      dispatch({
+        type: 'ADD_LEVEL',
+      });
+    },
     addMove: () => {
       dispatch({
         type: 'ADD_MOVE',
+      });
+    },
+    clearMove: () => {
+      dispatch({
+        type: 'CLEAR_MOVE',
       });
     }
   }

@@ -1,24 +1,24 @@
 import { combineReducers } from 'redux';
 import { MOVED_INDEX } from "../actions/";
 
-let dataState = { 
-  movedIndex: null,
+const defaultState = {
+  moves: 0,
 };
 
-const indexReducer = (state = dataState, action) => {
+const movesReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case MOVED_INDEX:
+    case 'ADD_MOVE':
       return Object.assign({}, state, { 
-          movedIndex: action.data,
+        moves: state.moves + 1,
       });
-    default:
+    default: 
       return state;
-    }
-  };
+  }
+};
 
 // Combine all the reducers
 const AppReducer = combineReducers({
-  indexReducer,
+  movesReducer,
 });
 
 export default AppReducer;

@@ -120,6 +120,11 @@ class Board extends Component {
         });
         // Update moves in Game
         this.props.countMoves();
+        store.dispatch(
+          {
+            type: 'ADD_MOVE',
+          }
+        )
       }
 
       // Reset the moved tile
@@ -194,8 +199,7 @@ class Board extends Component {
 // Map the state of the redux store to the component props
 function mapStateToProps(state, props) {
   return {
-    colors: state.indexReducer.colors,
-    movedIndex: state.indexReducer.movedIndex,
+    moves: state.moves,
   }
 }
 

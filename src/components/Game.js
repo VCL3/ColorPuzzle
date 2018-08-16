@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Button, SectionList, StyleSheet, Text, View } from 'react-native';
 import { Header } from 'react-navigation';
 import Board from './Board';
@@ -11,7 +12,7 @@ import {
 import PropTypes from 'prop-types';
 import Utils from '../utils/Utils';
 
-export default class Game extends Component {
+class Game extends Component {
 
   static navigationOptions = {
     gesturesEnabled: false,
@@ -127,7 +128,7 @@ export default class Game extends Component {
           </View>
           <View style={styles.score}>
             <Text>Move</Text>
-            <Text style={styles.moves}>{this.state.moves}</Text>
+            <Text style={styles.moves}>{store.getState().moves}</Text>
           </View>
         </View>
         <Board headerHeight={HEADER_HEIGHT} countMoves={this.countMoves}/>
@@ -136,6 +137,24 @@ export default class Game extends Component {
     );
   }
 }
+
+function mapStateToProps(state, props) {
+  return {
+    moves: state.moves,
+  }
+}
+
+function mapDispatchToProps(dispatch, props) {
+  return {
+    addMove: () => {
+      dispatch({
+        type: 'ADD_MOVE',
+      });
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Game);
 
 // Game.propTypes = {
 //   numbers: PropTypes.arrayOf(PropTypes.number).isRequired,

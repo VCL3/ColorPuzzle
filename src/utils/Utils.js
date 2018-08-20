@@ -1,4 +1,3 @@
-import React from 'react';
 import { PixelRatio } from 'react-native';
 import Dimensions from 'Dimensions';
 
@@ -18,6 +17,7 @@ const Utils = {
   },
   getOrientation: getOrientation, 
   tileCount: 7,
+  widthHeightRatio: 1.0,
   post(url, data, callback) {
     const fetchOptions = {
       method: 'POST',

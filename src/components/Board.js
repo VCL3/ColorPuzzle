@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
 import * as Actions from '../actions/index';
-import { Button, SectionList, StyleSheet, Text, View, PanResponder, LayoutAnimation, Alert } from 'react-native';
-import { Header } from 'react-navigation';
-import Tile from './Tile';
+import { StyleSheet, Text, View, PanResponder, LayoutAnimation, Alert } from 'react-native';
+import ColorEngine from '../engine/ColorEngine';
 import Utils from '../utils/Utils'
-import ColorEngine from '../utils/ColorEngine';
 import tinycolor from 'tinycolor2';
 
 export default class Board extends Component {
 
   constructor(props) {
-    super(props);
-    this._width = Utils.size.width / Utils.tileCount;
+    super(props); 
+    
+    const { width, height, colors } = this.props;
+    this.width = width;
+    this.height = height;
+    this.tileWidth = Utils.size.width / width;
+    this.tileHeight = Utils.size.width * Utils.widthHeightRatio / height;
 
     // Initial touch
     this.topIndex = 0;
@@ -29,10 +30,11 @@ export default class Board extends Component {
     this.finalTop = 0;
     this.finalLeft = 0;
 
-    const upperLeft = tinycolor("rgb 188 69 68");
-    const upperRight = tinycolor("rgb 89 175 241");
-    const lowerLeft = tinycolor("rgb 242 196 108");
-    const lowerRight = tinycolor("rgb 243 243 243");
+    const colors = this.props.colors;
+    const upperLeft = tinycolor(colors[0]);
+    const upperRight = tinycolor(colors[1]);
+    const lowerLeft = tinycolor(colors[2]);
+    const lowerRight = tinycolor(colors[3]);
     this.colorEngine = new ColorEngine(upperLeft, upperRight, lowerLeft, lowerRight);
     
     this.state = {
@@ -53,8 +55,8 @@ export default class Board extends Component {
         this.topIndex = this.returnTopIndex(pageY);
         this.leftIndex = this.returnLeftIndex(pageX);
         this.index = this.calculateIndexWithTopAndLeft(this.topIndex, this.leftIndex);
-        this.top = this._width * this.topIndex;
-        this.left = this._width * this.leftIndex;
+        this.top = this.tileHeight * this.topIndex;
+        this.left = this.tileWidth * this.leftIndex;
       },
       onPanResponderMove: (evt, gestureState) => {
         this.finalTop = this.top + gestureState.dy;
@@ -79,11 +81,11 @@ export default class Board extends Component {
 
   // Return matching index
   returnTopIndex(pageY) {
-    return Math.floor((pageY - this.props.headerHeight) / this._width);
+    return Math.floor((pageY - this.props.headerHeight) / this.tileHeight);
   }
 
   returnLeftIndex(pageX) {
-    return Math.floor((pageX) / this._width);
+    return Math.floor((pageX) / this.tileWidth);
   }
 
   calculateIndexWithXAndY(pageX, pageY) {
@@ -93,7 +95,7 @@ export default class Board extends Component {
   }
 
   calculateIndexWithTopAndLeft(topIndex, leftIndex) {
-    return topIndex * Utils.tileCount + leftIndex;
+    return topIndex * this.width + leftIndex;
   }
 
   _release(evt, gestureState) {
@@ -109,7 +111,7 @@ export default class Board extends Component {
     };
     this.finalTopIndex = this.returnTopIndex(gestureState.moveY);
     this.finalLeftIndex = this.returnLeftIndex(gestureState.moveX);
-    if ((-1 < this.finalTopIndex) && (this.finalTopIndex < Utils.tileCount) && (-1 < this.finalLeftIndex) && this.finalLeftIndex < Utils.tileCount) {     
+    if ((-1 < this.finalTopIndex) && (this.finalTopIndex < this.height) && (-1 < this.finalLeftIndex) && this.finalLeftIndex < this.width) {     
       this.finalIndex = this.calculateIndexWithTopAndLeft(this.finalTopIndex, this.finalLeftIndex);
 
       // If valid move, swap selected tiles and rerender the board
@@ -148,8 +150,8 @@ export default class Board extends Component {
     } else {
       // console.log(this.topIndex,this.leftIndex)
       // let box = this.refs["box" + this.index];
-      // let top = this.topIndex*this._width;
-      // let left = this.leftIndex*this._width;
+      // let top = this.topIndex*this.tileWidth;
+      // let left = this.leftIndex*this.tileWidth;
       // box.setNativeProps({
       //   style: {top,left,...shadowStyle},
       // });
@@ -159,8 +161,8 @@ export default class Board extends Component {
 
   render() {
     const tiles = this.state.colors.map((color, index) => {
-      let top = Math.floor(index / Utils.tileCount) * this._width;
-      let left = (index % Utils.tileCount) * this._width;
+      let top = Math.floor(index / this.height) * this.tileHeight;
+      let left = (index % Utils.tileCount) * this.tileWidth;
       if (Utils.isBorderTile(index) || Utils.isCrossTile(index)) {
         return (
           <View

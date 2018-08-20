@@ -1,0 +1,38 @@
+[
+  {
+    "level":1,
+    "width":7,
+    "height":7,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":2,
+    "width":1,
+    "height":7,
+    "colors":[]
+  },
+  {
+    "level":3,
+    "width":1,
+    "height":7,
+    "colors":[]
+  },
+  {
+    "level":4,
+    "width":1,
+    "height":7,
+    "colors":[]
+  },
+  {
+    "level":5,
+    "width":1,
+    "height":7,
+    "colors":[]
+  },
+  {
+    "level":6,
+    "width":1,
+    "height":7,
+    "colors":[]
+  }
+]

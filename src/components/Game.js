@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, SectionList, StyleSheet, Text, View } from 'react-native';
-import { Header } from 'react-navigation';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import LevelsFactory from '../engine/LevelsFactory';
 import Board from './Board';
 import {
   GAME_IDLE,
@@ -21,6 +21,8 @@ class Game extends Component {
   constructor(props) {
     super(props);
     // const { numbers, tileSize, gridSize, moves, seconds } = props;
+
+    this.LevelsFactory = new LevelsFactory("hello");
 
     this.state = {
       gameState: GAME_IDLE,
@@ -55,6 +57,7 @@ class Game extends Component {
   render() {
     console.log("Render-Game");
     const { level, moves, addLevel, addMove, clearMove } = this.props;
+    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(1);
 
     // const actions = [
     //   <FlatButton label="Close" onTouchTap={this.handleDialogClose} />,
@@ -79,7 +82,14 @@ class Game extends Component {
             <Text style={styles.moves}>{moves}</Text>
           </View>
         </View>
-        <Board headerHeight={HEADER_HEIGHT} addMove={addMove} handleGameWin={this.handleGameWin} />
+        <Board 
+          headerHeight={HEADER_HEIGHT}
+          width={width}
+          height={height}
+          colors={colors}
+          addMove={addMove}
+          handleGameWin={this.handleGameWin}
+        />
         <View style={styles.footer} />
       </View>
     );

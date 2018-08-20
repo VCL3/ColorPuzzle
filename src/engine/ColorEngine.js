@@ -1,5 +1,5 @@
 import tinycolor from 'tinycolor2';
-import Utils from './Utils';
+import Utils from '../utils/Utils';
 
 const getStepIncrement = function (start, end, i) {
   return start + (end - start) / (Utils.tileCount - 1) * i;

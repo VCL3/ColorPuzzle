@@ -1,36 +1,40 @@
 import tinycolor from 'tinycolor2';
 import Utils from '../utils/Utils';
 
-const getStepIncrement = function (start, end, i) {
-  return start + (end - start) / (Utils.tileCount - 1) * i;
+const getStepIncrement = function (length, start, end, i) {
+  if (length == 1) {
+    return start;
+  } else {
+    return start + (end - start) / (length - 1) * i;
+  }
 }
 
-const getStepColor = function (startColor, endColor, i) {
+const getStepColor = function (length, startColor, endColor, i) {
   const startR = startColor.toRgb().r;
   const startG = startColor.toRgb().g;
   const startB = startColor.toRgb().b;
   const endR = endColor.toRgb().r;
   const endG = endColor.toRgb().g;
   const endB = endColor.toRgb().b;
-  return tinycolor({ r: getStepIncrement(startR, endR, i), g: getStepIncrement(startG, endG, i), b: getStepIncrement(startB, endB, i) });
+  return tinycolor({ r: getStepIncrement(length, startR, endR, i), g: getStepIncrement(length, startG, endG, i), b: getStepIncrement(length, startB, endB, i) });
 }
 
-const getOneDimensionalArray = function (startColor, endColor) {
+const getOneDimensionalArray = function (length, startColor, endColor) {
   let oneDimensionalArray = [];
-  for (let i = 0; i < Utils.tileCount; i++) {
-    oneDimensionalArray.push(getStepColor(startColor, endColor, i));
+  for (let i = 0; i < length; i++) {
+    oneDimensionalArray.push(getStepColor(length, startColor, endColor, i));
   }
   return oneDimensionalArray;
 }
 
-const generateColorArray = function (upperLeft, upperRight, lowerLeft, lowerRight) {
+const generateColorArray = function (width, height, upperLeft, upperRight, lowerLeft, lowerRight) {
   let fullColorArray = [];
   // upperLeft -> lowerLeft
-  const leftColumn = getOneDimensionalArray(upperLeft, lowerLeft);
+  const leftColumn = getOneDimensionalArray(height, upperLeft, lowerLeft);
   // upperRight -> lowerRight
-  const rightColumn = getOneDimensionalArray(upperRight, lowerRight);
-  for (let i = 0; i < Utils.tileCount; i++) {
-    let rowColorArray = getOneDimensionalArray(leftColumn[i], rightColumn[i]);
+  const rightColumn = getOneDimensionalArray(height, upperRight, lowerRight);
+  for (let i = 0; i < height; i++) {
+    let rowColorArray = getOneDimensionalArray(width, leftColumn[i], rightColumn[i]);
     fullColorArray = fullColorArray.concat(rowColorArray);
   }
   return fullColorArray;
@@ -44,17 +48,17 @@ const fullyShuffleArray = arr => arr
   .sort((a, b) => a[0] - b[0])
   .map(a => a[1]);
 
-const randomizeTiles = function (colorArray) {
+const randomizeTiles = function (colorArray, width, height) {
   const randomizableTiles = [];
   colorArray.map((color, index) => {
-    if (!(Utils.isBorderTile(index) || Utils.isCrossTile(index))) {
+    if (!(Utils.isBorderTile(index, width, height) || Utils.isCrossTile(index, width, height))) {
       randomizableTiles.push(color);
     }
   });
   const randomizedTiles = fullyShuffleArray(randomizableTiles);
   let i = 0;
   colorArray.map((color, index) => {
-    if (!(Utils.isBorderTile(index) || Utils.isCrossTile(index))) {
+    if (!(Utils.isBorderTile(index, width, height) || Utils.isCrossTile(index, width, height))) {
       colorArray[index] = randomizedTiles[i];
       i++;
     }
@@ -64,9 +68,13 @@ const randomizeTiles = function (colorArray) {
 
 export default class ColorEngine {
 
-  constructor(upperLeft, upperRight, lowerLeft, lowerRight) {
-    this._colorArray = generateColorArray(upperLeft, upperRight, lowerLeft, lowerRight);
-    this.currentColorArray = randomizeTiles(this._colorArray.slice());
+  constructor(width, height, upperLeft, upperRight, lowerLeft, lowerRight) {
+    this._colorArray = generateColorArray(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
+    this.currentColorArray = randomizeTiles(this._colorArray.slice(), width, height);
+    // Make sure start state is not success state
+    while (this.checkSuccess()) {
+      this.currentColorArray = randomizeTiles(this._colorArray.slice(), width, height);
+    }
   };
 
   checkSuccess() {

@@ -20,14 +20,13 @@ class Game extends Component {
 
   constructor(props) {
     super(props);
-    // const { numbers, tileSize, gridSize, moves, seconds } = props;
 
-    this.LevelsFactory = new LevelsFactory("hello");
+    const currentLevel = this.props.navigation.getParam('currentLevel', 1);
+    this.LevelsFactory = new LevelsFactory();
 
     this.state = {
       gameState: GAME_IDLE,
-      level: 0,
-      moves: 0,
+      currentLevel: currentLevel,
       dialogOpen: false,
     };
   }
@@ -41,8 +40,17 @@ class Game extends Component {
   // }
 
   handleGameWin = () => {
-    // Update level
-    this.props.addLevel();
+    // Update level and clear move
+    const { highestLevel, gameLevel, addHighestLevel, addLevel, clearMove } = this.props;
+    if (gameLevel === highestLevel) {
+      addHighestLevel();
+    }   
+    addLevel();
+    clearMove();
+    console.log(gameLevel);
+    this.props.navigation.push('Game', {
+      currentLevel: this.props.gameLevel,
+    });
     // storage.save({
     //   key: 'level',  // 注意:请不要在key中使用_下划线符号!
     //   data: { 
@@ -56,12 +64,8 @@ class Game extends Component {
 
   render() {
     console.log("Render-Game");
-    const { level, moves, addLevel, addMove, clearMove } = this.props;
-    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(2);
-
-    // const actions = [
-    //   <FlatButton label="Close" onTouchTap={this.handleDialogClose} />,
-    // ];
+    const { highestLevel, gameLevel, gameMoves, addHighestLevel, addLevel, addMove, clearMove } = this.props;
+    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(gameLevel);
 
     return (
       <View style={styles.container}>
@@ -69,17 +73,17 @@ class Game extends Component {
           <Button
             onPress={() => {
               clearMove();
-              this.props.navigation.goBack();
+              this.props.navigation.popToTop();
             }}
             title="Dismiss"
           />
           <View style={styles.score}>
             <Text>Level</Text>
-            <Text style={styles.moves}>{level}</Text>
+            <Text style={styles.moves}>{gameLevel}</Text>
           </View>
           <View style={styles.score}>
             <Text>Move</Text>
-            <Text style={styles.moves}>{moves}</Text>
+            <Text style={styles.moves}>{gameMoves}</Text>
           </View>
         </View>
         <Board 
@@ -97,28 +101,33 @@ class Game extends Component {
 }
 
 function mapStateToProps(state, props) {
-  console.log(state);
   return {
-    level: state.gameReducer.level,
-    moves: state.gameReducer.moves,
+    highestLevel: state.gameReducer.highestLevel,
+    gameLevel: state.gameReducer.gameLevel,
+    gameMoves: state.gameReducer.gameMoves,
   }
 }
 
 function mapDispatchToProps(dispatch, props) {
   return {
+    addHighestLevel: () => {
+      dispatch({
+        type: 'ADD_HIGHEST_LEVEL',
+      });
+    },
     addLevel: () => {
       dispatch({
-        type: 'ADD_LEVEL',
+        type: 'ADD_GAME_LEVEL',
       });
     },
     addMove: () => {
       dispatch({
-        type: 'ADD_MOVE',
+        type: 'ADD_GAME_MOVE',
       });
     },
     clearMove: () => {
       dispatch({
-        type: 'CLEAR_MOVE',
+        type: 'CLEAR_GAME_MOVE',
       });
     }
   }
@@ -135,12 +144,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(Game);
 //   seconds: PropTypes.number,
 // };
 
-Game.defaultProps = {
-  level: 0,
-  moves: 0,
-};
+// Game.defaultProps = {
+//   level: 0,
+//   moves: 0,
+// };
 
-const HEADER_HEIGHT = 200;
+const HEADER_HEIGHT = 150;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -161,7 +170,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   footer: {
-    height: Utils.size.height - HEADER_HEIGHT - Utils.size.width,
+    height: Utils.size.height - HEADER_HEIGHT - Utils.size.width * Utils.widthHeightRatio,
     backgroundColor: Utils.colors.themeBackgroundColor,
   },
 });

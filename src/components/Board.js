@@ -35,11 +35,14 @@ export default class Board extends Component {
     const upperRight = tinycolor(colors[1]);
     const lowerLeft = tinycolor(colors[2]);
     const lowerRight = tinycolor(colors[3]);
-    this.colorEngine = new ColorEngine(upperLeft, upperRight, lowerLeft, lowerRight);
+    this.colorEngine = new ColorEngine(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
     
     this.state = {
       colors: this.colorEngine.currentColorArray,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
   }
 
   componentWillMount() {
@@ -160,12 +163,13 @@ export default class Board extends Component {
   }
 
   render() {
+    console.log("Render-Board");
     const tiles = this.state.colors.map((color, index) => {
       let top = Math.floor(index / this.width) * this.tileHeight;
       let left = (index % this.width) * this.tileWidth;
       let width = this.tileWidth;
       let height = this.tileHeight;
-      if (Utils.isBorderTile(index) || Utils.isCrossTile(index)) {
+      if (Utils.isBorderTile(index, this.width, this.height) || Utils.isCrossTile(index, this.width, this.height)) {
         return (
           <View
             key={index}

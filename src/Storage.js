@@ -35,7 +35,6 @@ const storage = new Storage({
 
 // 对于react native
 global.storage = storage;
-console.log("RUN");
 
 const getLevel = () => {
   storage.load({

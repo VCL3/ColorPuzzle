@@ -1,23 +1,28 @@
 import { combineReducers } from 'redux';
 
 const defaultState = {
-  level: 1,
-  moves: 0,
+  highestLevel: 1,
+  gameLevel: 1,
+  gameMoves: 0,
 };
 
 const gameReducer = (state = defaultState, action) => {
   switch (action.type) {
-    case 'ADD_LEVEL':
+    case 'ADD_HIGHEST_LEVEL':
       return Object.assign({}, state, { 
-        level: state.level + 1,
+        highestLevel: state.highestLevel + 1,
       });
-    case 'ADD_MOVE':
+    case 'ADD_GAME_LEVEL':
       return Object.assign({}, state, { 
-        moves: state.moves + 1,
+        gameLevel: state.gameLevel + 1,
       });
-    case 'CLEAR_MOVE':
+    case 'ADD_GAME_MOVE':
       return Object.assign({}, state, { 
-        moves: 0,
+        gameMoves: state.gameMoves + 1,
+      });
+    case 'CLEAR_GAME_MOVE':
+      return Object.assign({}, state, { 
+        gameMoves: 0,
       });
     default: 
       return state;

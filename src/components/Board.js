@@ -10,6 +10,7 @@ export default class Board extends Component {
   constructor(props) {
     super(props); 
     
+    // Tile setup
     const { width, height, colors } = this.props;
     this.width = width;
     this.height = height;
@@ -30,7 +31,6 @@ export default class Board extends Component {
     this.finalTop = 0;
     this.finalLeft = 0;
 
-    const colors = this.props.colors;
     const upperLeft = tinycolor(colors[0]);
     const upperRight = tinycolor(colors[1]);
     const lowerLeft = tinycolor(colors[2]);
@@ -115,7 +115,7 @@ export default class Board extends Component {
       this.finalIndex = this.calculateIndexWithTopAndLeft(this.finalTopIndex, this.finalLeftIndex);
 
       // If valid move, swap selected tiles and rerender the board
-      if (!(Utils.isBorderTile(this.finalIndex) || Utils.isCrossTile(this.finalIndex))) {
+      if (!(Utils.isBorderTile(this.finalIndex, this.width, this.height) || Utils.isCrossTile(this.finalIndex))) {
         this.colorEngine.currentColorArray[this.index] = this.colorEngine.currentColorArray.splice(this.finalIndex, 1, this.colorEngine.currentColorArray[this.index])[0];
         this.setState({
           colors: this.colorEngine.currentColorArray,
@@ -161,14 +161,16 @@ export default class Board extends Component {
 
   render() {
     const tiles = this.state.colors.map((color, index) => {
-      let top = Math.floor(index / this.height) * this.tileHeight;
-      let left = (index % Utils.tileCount) * this.tileWidth;
+      let top = Math.floor(index / this.width) * this.tileHeight;
+      let left = (index % this.width) * this.tileWidth;
+      let width = this.tileWidth;
+      let height = this.tileHeight;
       if (Utils.isBorderTile(index) || Utils.isCrossTile(index)) {
         return (
           <View
             key={index}
             ref={'tile' + index}
-            style={[styles.tile, { top, left, backgroundColor: color.toRgbString() }]}
+            style={[styles.tile, { width, height, top, left, backgroundColor: color.toRgbString() }]}
           >
             <Text>X</Text>
           </View>
@@ -179,7 +181,7 @@ export default class Board extends Component {
             key={index}
             ref={'tile' + index}
             {...this._panResponder.panHandlers}
-            style={[styles.tile, { top, left, backgroundColor: color }]}
+            style={[styles.tile, { width, height, top, left, backgroundColor: color.toRgbString() }]}
           />
         );
       }
@@ -193,7 +195,6 @@ export default class Board extends Component {
   }
 }
 
-const WIDTH = Utils.size.width / Utils.tileCount;
 const styles = StyleSheet.create({
   container:{
     flex:1,
@@ -201,8 +202,6 @@ const styles = StyleSheet.create({
     backgroundColor: Utils.colors.themeBackgroundColor,
   },
   tile:{
-    width: WIDTH,
-    height: WIDTH,
     zIndex: 0,
     position:"absolute",
     alignItems: "center",

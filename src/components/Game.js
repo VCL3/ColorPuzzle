@@ -57,7 +57,7 @@ class Game extends Component {
   render() {
     console.log("Render-Game");
     const { level, moves, addLevel, addMove, clearMove } = this.props;
-    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(1);
+    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(2);
 
     // const actions = [
     //   <FlatButton label="Close" onTouchTap={this.handleDialogClose} />,

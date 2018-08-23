@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as Actions from '../actions/index';
 import { StyleSheet, Text, View, PanResponder, LayoutAnimation, Alert } from 'react-native';
 import ColorEngine from '../engine/ColorEngine';
-import Utils from '../utils/Utils'
+import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 
 export default class Board extends Component {
@@ -40,9 +40,6 @@ export default class Board extends Component {
     this.state = {
       colors: this.colorEngine.currentColorArray,
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
   }
 
   componentWillMount() {

@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
+import { getHighestLevel } from '../Storage';
 
 const defaultState = {
   highestLevel: 1,
-  gameLevel: 1,
   gameMoves: 0,
 };
 
@@ -12,9 +12,9 @@ const gameReducer = (state = defaultState, action) => {
       return Object.assign({}, state, { 
         highestLevel: state.highestLevel + 1,
       });
-    case 'ADD_GAME_LEVEL':
+    case 'SET_HIGHEST_LEVEL':
       return Object.assign({}, state, { 
-        gameLevel: state.gameLevel + 1,
+        highestLevel: action.highestLevel,
       });
     case 'ADD_GAME_MOVE':
       return Object.assign({}, state, { 

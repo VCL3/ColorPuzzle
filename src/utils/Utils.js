@@ -56,6 +56,10 @@ const Utils = {
   },
   colors: {
     themeBackgroundColor: 'rgb(235, 214, 174)',
+    defaultUpperLeft: 'rgb(235, 214, 174)',
+    defaultUpperRight: 'rgb(255, 225, 168)',
+    defaultLowerLeft: 'rgb(255, 208, 122)',
+    defaultLowerRight: 'rgb(255, 196, 86)',
   },
   isBorderTile: isBorderTile,
   isCrossTile: isCrossTile,

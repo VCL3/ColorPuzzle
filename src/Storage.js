@@ -1,5 +1,6 @@
 import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
+import { store } from '../App';
 
 const storage = new Storage({
   // 最大容量，默认值1000条数据循环存储
@@ -22,33 +23,35 @@ const storage = new Storage({
   // 或是在任何时候，直接对storage.sync进行赋值修改
   // 或是写到另一个文件里，这里require引入
   sync: {
-    level() {
+    highestLevel() {
+      console.log("SYNC");
       storage.save({
-        key: 'level',
-        data: { 
-          level: 1
-        }
+        key: 'highestLevel',
+        data: 1,
       }
     )}
   }
-})  
+})
 
 // 对于react native
 global.storage = storage;
 
-const getLevel = () => {
+export const getHighestLevel = () => {
+  console.log("LOAD");
   storage.load({
-    key: 'level',
+    key: 'highestLevel',
     autoSync: true,
     syncInBackground: true,
     syncParams: {
       extraFetchOptions: {
       },
-      someFlag: true,
     },
   }).then(ret => {
-    console.log("HERE")
-    console.log(ret);
+    console.log("STORAGE")
+    store.dispatch({
+      type: 'SET_HIGHEST_LEVEL',
+      highestLevel: ret,
+    });
     return ret;
   }).catch(err => {
     //如果没有找到数据且没有sync方法，
@@ -65,4 +68,11 @@ const getLevel = () => {
   })
 }
 
-export default getLevel;
+export const setHighestLevel = (highestLevel) => {
+  console.log("SAVE");
+  storage.save({
+    key: 'highestLevel',
+    data: highestLevel,
+    expires: null,
+  });
+}

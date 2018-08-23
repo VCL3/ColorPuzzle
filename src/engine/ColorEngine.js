@@ -77,6 +77,14 @@ export default class ColorEngine {
     }
   };
 
+  getCorrectColorForIndex(index) {
+    if (index < this._colorArray.length) {
+      return this._colorArray[index];
+    } else {
+      return tinycolor('#ffffff');
+    }
+  }
+
   checkSuccess() {
     for (let i = 0; i < this._colorArray.length; i++) {
       if (!tinycolor.equals(this._colorArray[i], this.currentColorArray[i])) {

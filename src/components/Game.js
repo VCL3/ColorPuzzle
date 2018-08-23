@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import LevelsFactory from '../engine/LevelsFactory';
 import Board from './Board';
+import { setHighestLevel } from '../Storage';
 import {
   GAME_IDLE,
   GAME_OVER,
@@ -21,13 +22,10 @@ class Game extends Component {
   constructor(props) {
     super(props);
 
-    const currentLevel = this.props.navigation.getParam('currentLevel', 1);
     this.LevelsFactory = new LevelsFactory();
 
     this.state = {
-      gameState: GAME_IDLE,
-      currentLevel: currentLevel,
-      dialogOpen: false,
+      currentLevel: this.props.navigation.getParam('currentLevel', 1),
     };
   }
 
@@ -36,20 +34,16 @@ class Game extends Component {
   //   const newTiles = this.generateTiles(nextProps.numbers, gridSize, tileSize);
   // }
 
-  // generateTiles(numbers, gridSize, tileSize) {
-  // }
-
   handleGameWin = () => {
     // Update level and clear move
-    const { highestLevel, gameLevel, addHighestLevel, addLevel, clearMove } = this.props;
-    if (gameLevel === highestLevel) {
+    const { highestLevel, addHighestLevel, addLevel, clearMove } = this.props;
+    if (this.state.currentLevel === highestLevel) {
       addHighestLevel();
+      setHighestLevel(this.state.currentLevel + 1);
     }   
-    addLevel();
     clearMove();
-    console.log(gameLevel);
     this.props.navigation.push('Game', {
-      currentLevel: this.props.gameLevel,
+      currentLevel: this.state.currentLevel + 1,
     });
     // storage.save({
     //   key: 'level',  // 注意:请不要在key中使用_下划线符号!
@@ -64,8 +58,8 @@ class Game extends Component {
 
   render() {
     console.log("Render-Game");
-    const { highestLevel, gameLevel, gameMoves, addHighestLevel, addLevel, addMove, clearMove } = this.props;
-    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(gameLevel);
+    const { highestLevel, gameMoves, addHighestLevel, addMove, clearMove } = this.props;
+    const { width, height, colors } = this.LevelsFactory.getSetupForLevel(this.state.currentLevel);
 
     return (
       <View style={styles.container}>
@@ -75,11 +69,11 @@ class Game extends Component {
               clearMove();
               this.props.navigation.popToTop();
             }}
-            title="Dismiss"
+            title="Go Back"
           />
           <View style={styles.score}>
             <Text>Level</Text>
-            <Text style={styles.moves}>{gameLevel}</Text>
+            <Text style={styles.moves}>{this.state.currentLevel}</Text>
           </View>
           <View style={styles.score}>
             <Text>Move</Text>
@@ -103,7 +97,6 @@ class Game extends Component {
 function mapStateToProps(state, props) {
   return {
     highestLevel: state.gameReducer.highestLevel,
-    gameLevel: state.gameReducer.gameLevel,
     gameMoves: state.gameReducer.gameMoves,
   }
 }
@@ -113,11 +106,6 @@ function mapDispatchToProps(dispatch, props) {
     addHighestLevel: () => {
       dispatch({
         type: 'ADD_HIGHEST_LEVEL',
-      });
-    },
-    addLevel: () => {
-      dispatch({
-        type: 'ADD_GAME_LEVEL',
       });
     },
     addMove: () => {

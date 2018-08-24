@@ -56,6 +56,7 @@ const Utils = {
   },
   colors: {
     themeBackgroundColor: 'rgb(235, 214, 174)',
+    themeShadeColor: 'rgb(240, 224, 194)',
     themeIconColor: 'rgb()',
     themeDarkBlack: 'rgb(51, 51, 51)',
     themeLightBlack: 'rgb(102, 102, 102)',

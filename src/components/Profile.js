@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import GridView from 'react-native-super-grid';
 import { storageGetHighestLevel, storageSetHighestLevel } from '../Storage';
 import Utils from '../utils/Utils';
@@ -14,26 +15,19 @@ class Profile extends Component {
     super(props);
   }
 
-  componentWillMount() {
-  }
-
   render() {
     const { highestLevel, setHighestLevel } = this.props;
 
     return (
       <View style={styles.home}>
-        <View style={styles.header}>
-          <Text>Highest Level</Text>
-          <Text>{highestLevel}</Text>
-          <TouchableOpacity 
-            onPress={() => {
-              setHighestLevel(1);
-              storageSetHighestLevel(1);
-            }}
-          >
-            <Text>Clear Local Data</Text>
-          </TouchableOpacity>
-        </View> 
+        <TouchableOpacity 
+          onPress={() => {
+            setHighestLevel(1);
+            storageSetHighestLevel(1);
+          }}
+        >
+          <Text>Reset All Levels</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -60,14 +54,10 @@ export default connect(mapStateToProps, mapDispatchToProps)(Profile);
 
 const styles = StyleSheet.create({
   home: {
-    flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: getStatusBarHeight(),
     backgroundColor: Utils.colors.themeBackgroundColor,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: "center",
-    justifyContent: "space-around",
   },
 });

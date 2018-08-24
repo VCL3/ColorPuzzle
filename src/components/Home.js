@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
+import Icon from 'react-native-vector-icons/Ionicons';
 import GridView from 'react-native-super-grid';
 import ColorEngine from '../engine/ColorEngine';
 import levelsConfig from '../config/LevelsConfig.json';
@@ -8,13 +10,22 @@ import { storageGetHighestLevel, storageSetHighestLevel } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-
 class Home extends Component {
+
+  static navigationOptions = { 
+    header: null 
+  };
+
+  // static navigationOptions = {
+  //   title: 'Welcome', 
+  //   header: { 
+  //     visible:false
+  //   }
+  // };
 
   constructor(props) {
     super(props);
-    this.colorEngine = new ColorEngine(4, 3, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
+    this.colorEngine = new ColorEngine(4, 7, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
   }
 
   componentWillMount() {
@@ -28,14 +39,14 @@ class Home extends Component {
     return (
       <View style={styles.home}>
         <View style={styles.header}>
-          <View style={styles.highestLevel}>
-            <Text>Highest Level</Text>
-            <Text>#{highestLevel}</Text>
+          <View style={styles.highestLevelContainer}>
+            <Text style={styles.highestLevel}>Next Level</Text>
+            <Text style={[styles.highestLevel, { fontSize: 35 }]}>#{highestLevel}</Text>
           </View>
           <TouchableOpacity 
             onPress={() => this.props.navigation.navigate('Profile')}
           >
-            <Icon name="md-person" size={60} color={Utils.colors.themeLightBlack} />
+            <Icon name="md-person" size={44} color={Utils.colors.themeLightBlack} />
           </TouchableOpacity>
         </View> 
         <GridView
@@ -95,23 +106,32 @@ export default connect(mapStateToProps, mapDispatchToProps)(Home);
 const styles = StyleSheet.create({
   home: {
     flex: 1, 
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    paddingTop: getStatusBarHeight(),
     backgroundColor: Utils.colors.themeBackgroundColor,
   },
   header: {
+    width: Utils.size.width,
     flexDirection: 'row',
-    alignItems: "center",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    paddingTop: 15,
+    paddingBottom: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: Utils.colors.themeBackgroundColor,
+  },
+  highestLevelContainer: {
+    flexDirection: 'column',
     justifyContent: "space-around",
+    alignItems: "flex-start",
   },
   highestLevel: {
-    flexDirection: 'column',
-    alignItems: "center",
-    justifyContent: "space-around",
+    fontSize: 20,
+    fontWeight: '600',
   },
   gameGrid: {
-    paddingTop: 25,
     flex: 1,
+    backgroundColor: Utils.colors.themeBackgroundColor,
   },
   gameTile: {
     justifyContent: 'flex-end',

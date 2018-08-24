@@ -85,6 +85,16 @@ export default class ColorEngine {
     }
   }
 
+  getIncorrectColorIndex() {
+    const incorrectIndices = [];
+    this.currentColorArray.map((color, index) => {
+      if (!tinycolor.equals(this._colorArray[index], this.currentColorArray[index])) {
+        incorrectIndices.push(index);
+      }
+    });
+    return incorrectIndices[Math.floor(Math.random() * incorrectIndices.length)];
+  }
+
   checkSuccess() {
     for (let i = 0; i < this._colorArray.length; i++) {
       if (!tinycolor.equals(this._colorArray[i], this.currentColorArray[i])) {

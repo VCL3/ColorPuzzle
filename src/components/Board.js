@@ -36,6 +36,17 @@ export default class Board extends Component {
     const lowerLeft = tinycolor(colors[2]);
     const lowerRight = tinycolor(colors[3]);
     this.colorEngine = new ColorEngine(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
+
+    // this.customLayoutLinear = {
+    //   duration: 200,
+    //   create: {
+    //     type: LayoutAnimation.Types.linear,
+    //     property: LayoutAnimation.Properties.opacity,
+    //   },
+    //   update: {
+    //     type: LayoutAnimation.Types.curveEaseInEaseOut,
+    //   },
+    // };
     
     this.state = {
       colors: this.colorEngine.currentColorArray,
@@ -99,16 +110,6 @@ export default class Board extends Component {
   }
 
   _release(evt, gestureState) {
-    const shadowStyle = {
-      opacity:1,
-      shadowColor: "#000",
-      shadowOpacity: 0,
-      shadowRadius: 0,
-      shadowOffset: {
-        height: 0,
-        width: 0,
-      }
-    };
     this.finalTopIndex = this.returnTopIndex(gestureState.moveY);
     this.finalLeftIndex = this.returnLeftIndex(gestureState.moveX);
     if ((-1 < this.finalTopIndex) && (this.finalTopIndex < this.height) && (-1 < this.finalLeftIndex) && this.finalLeftIndex < this.width) {     
@@ -117,6 +118,7 @@ export default class Board extends Component {
       // If valid move, swap selected tiles and rerender the board
       if (!(Utils.isBorderTile(this.finalIndex, this.width, this.height) || Utils.isCrossTile(this.finalIndex))) {
         this.colorEngine.currentColorArray[this.index] = this.colorEngine.currentColorArray.splice(this.finalIndex, 1, this.colorEngine.currentColorArray[this.index])[0];
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         this.setState({
           colors: this.colorEngine.currentColorArray,
         });
@@ -140,23 +142,43 @@ export default class Board extends Component {
           'Win!',
           'You win the game!',
           [
-            {text: 'OK', onPress: () => this.props.handleGameWin()},
+            {text: 'Next', onPress: () => this.props.handleGameWin()},
             // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
           ],
           { cancelable: false }
         )
       }
-      // LayoutAnimation.configureNext(this.animations);
     } else {
-      // console.log(this.topIndex,this.leftIndex)
-      // let box = this.refs["box" + this.index];
-      // let top = this.topIndex*this.tileWidth;
-      // let left = this.leftIndex*this.tileWidth;
-      // box.setNativeProps({
-      //   style: {top,left,...shadowStyle},
-      // });
-      // LayoutAnimation.configureNext(this.animations);
+      // Reset the moved tile
+      let selectedTile = this.refs["tile" + this.index];
+      selectedTile.setNativeProps({
+        style: {
+          top: this.top,
+          left: this.left,
+          zIndex: 0,
+        },
+      });
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     }
+  }
+
+  handleHint() {
+    const incorrectIndex = this.colorEngine.getIncorrectColorIndex();
+    let incorrectTile = this.refs["tile" + incorrectIndex];
+    incorrectTile.setNativeProps({
+      style: {
+        borderWidth: 3,
+        borderColor: 'rgb(218, 119, 125)',
+      },
+    });
+    // Wait for 1.5s
+    setTimeout(() => {
+      incorrectTile.setNativeProps({
+        style: {
+          borderWidth: 0,
+        },
+      });
+    }, 1500);
   }
 
   render() {

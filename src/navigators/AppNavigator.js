@@ -7,6 +7,7 @@ import {
   createReactNavigationReduxMiddleware,
 } from 'react-navigation-redux-helpers';
 import Home from '../components/Home';
+import Profile from '../components/Profile';
 import Game from '../components/Game';
 import Utils from '../utils/Utils';
 
@@ -20,6 +21,9 @@ const MainNavigator = createStackNavigator(
     Home: {
       screen: Home,
     },
+    Profile: {
+      screen: Profile
+    }
   },
   {
     initialRouteName: 'Home',

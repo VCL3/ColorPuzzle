@@ -36,7 +36,7 @@ const storage = new Storage({
 // 对于react native
 global.storage = storage;
 
-export const getHighestLevel = () => {
+export const storageGetHighestLevel = () => {
   console.log("LOAD");
   storage.load({
     key: 'highestLevel',
@@ -68,7 +68,7 @@ export const getHighestLevel = () => {
   })
 }
 
-export const setHighestLevel = (highestLevel) => {
+export const storageSetHighestLevel = (highestLevel) => {
   console.log("SAVE");
   storage.save({
     key: 'highestLevel',

@@ -4,36 +4,38 @@ import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 import GridView from 'react-native-super-grid';
 import ColorEngine from '../engine/ColorEngine';
 import levelsConfig from '../config/LevelsConfig.json';
-import { getHighestLevel, setHighestLevel } from '../Storage';
+import { storageGetHighestLevel, storageSetHighestLevel } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
+
+import Icon from 'react-native-vector-icons/Ionicons';
 
 class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.colorEngine = new ColorEngine(4, 3, tinycolor(Utils.colors.defaultUpperLeft), tinycolor(Utils.colors.defaultUpperRight), tinycolor(Utils.colors.defaultLowerLeft), tinycolor(Utils.colors.defaultLowerRight));
+    this.colorEngine = new ColorEngine(4, 3, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
   }
 
   componentWillMount() {
     console.log("HOME-ComponentWillMount");
-    getHighestLevel();
+    storageGetHighestLevel();
   }
 
   render() {
-    const { highestLevel, gameLevel, setLevel } = this.props;
+    const { highestLevel } = this.props;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Utils.colors.themeBackgroundColor }}>
-        <View>
-          <Text>Highest Level</Text>
-          <Text>{highestLevel}</Text>
+      <View style={styles.home}>
+        <View style={styles.header}>
+          <View style={styles.highestLevel}>
+            <Text>Highest Level</Text>
+            <Text>#{highestLevel}</Text>
+          </View>
           <TouchableOpacity 
-            onPress={() => this.props.navigation.navigate('Game', {
-              currentLevel: item.level
-            })}
+            onPress={() => this.props.navigation.navigate('Profile')}
           >
-            <Text>Profile</Text>
+            <Icon name="md-person" size={60} color={Utils.colors.themeLightBlack} />
           </TouchableOpacity>
         </View> 
         <GridView
@@ -79,9 +81,10 @@ function mapStateToProps(state, props) {
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    setLevel: () => {
+    setHighestLevel: (highestLevel) => {
       dispatch({
-        type: 'SET_LEVEL',
+        type: 'SET_HIGHEST_LEVEL',
+        highestLevel: highestLevel,
       });
     },
   }
@@ -90,6 +93,22 @@ function mapDispatchToProps(dispatch, props) {
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const styles = StyleSheet.create({
+  home: {
+    flex: 1, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
+    backgroundColor: Utils.colors.themeBackgroundColor,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
+  highestLevel: {
+    flexDirection: 'column',
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
   gameGrid: {
     paddingTop: 25,
     flex: 1,

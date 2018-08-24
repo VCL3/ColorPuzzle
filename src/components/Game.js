@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import LevelsFactory from '../engine/LevelsFactory';
 import Board from './Board';
-import { setHighestLevel } from '../Storage';
+import { storageSetHighestLevel } from '../Storage';
 import {
   GAME_IDLE,
   GAME_OVER,
@@ -39,7 +39,7 @@ class Game extends Component {
     const { highestLevel, addHighestLevel, addLevel, clearMove } = this.props;
     if (this.state.currentLevel === highestLevel) {
       addHighestLevel();
-      setHighestLevel(this.state.currentLevel + 1);
+      storageSetHighestLevel(this.state.currentLevel + 1);
     }   
     clearMove();
     this.props.navigation.push('Game', {

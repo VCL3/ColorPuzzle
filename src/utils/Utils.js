@@ -1,5 +1,6 @@
 import { PixelRatio } from 'react-native';
 import Dimensions from 'Dimensions';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 const isBorderTile = (index, width, height) => {
   if (width == 1) {
@@ -31,7 +32,8 @@ const Utils = {
   pixel: 1 / PixelRatio.get(),
   size: {
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height
+    height: Dimensions.get('window').height,
+    statusBarHeight: getStatusBarHeight(),
   },
   getOrientation: getOrientation, 
   tileCount: 7,

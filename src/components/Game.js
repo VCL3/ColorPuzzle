@@ -124,7 +124,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(Game);
 //   moves: 0,
 // };
 
-const HEADER_HEIGHT = 120;
+const screenLessBoardHeight = Utils.size.height - Utils.size.width * Utils.widthHeightRatio;
+if (screenLessBoardHeight / 2 < 150) {
+  HEADER_HEIGHT = 150;
+} else {
+  HEADER_HEIGHT = screenLessBoardHeight / 2;
+}
 const styles = StyleSheet.create({
   header: {
     height: HEADER_HEIGHT,

@@ -16,20 +16,12 @@ class Home extends Component {
     header: null 
   };
 
-  // static navigationOptions = {
-  //   title: 'Welcome', 
-  //   header: { 
-  //     visible:false
-  //   }
-  // };
-
   constructor(props) {
     super(props);
-    this.colorEngine = new ColorEngine(4, 7, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
+    this.colorEngine = new ColorEngine(4, 9, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
   }
 
   componentWillMount() {
-    console.log("HOME-ComponentWillMount");
     storageGetHighestLevel();
   }
 

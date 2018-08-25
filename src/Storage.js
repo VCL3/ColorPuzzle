@@ -24,7 +24,6 @@ const storage = new Storage({
   // 或是写到另一个文件里，这里require引入
   sync: {
     highestLevel() {
-      console.log("SYNC");
       storage.save({
         key: 'highestLevel',
         data: 1,
@@ -37,7 +36,6 @@ const storage = new Storage({
 global.storage = storage;
 
 export const storageGetHighestLevel = () => {
-  console.log("LOAD");
   storage.load({
     key: 'highestLevel',
     autoSync: true,
@@ -47,7 +45,6 @@ export const storageGetHighestLevel = () => {
       },
     },
   }).then(ret => {
-    console.log("STORAGE")
     store.dispatch({
       type: 'SET_HIGHEST_LEVEL',
       highestLevel: ret,
@@ -69,7 +66,6 @@ export const storageGetHighestLevel = () => {
 }
 
 export const storageSetHighestLevel = (highestLevel) => {
-  console.log("SAVE");
   storage.save({
     key: 'highestLevel',
     data: highestLevel,

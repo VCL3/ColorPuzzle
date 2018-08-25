@@ -74,6 +74,7 @@ class Game extends Component {
           colors={colors}
           addMove={addMove}
           handleGameWin={this.handleGameWin}
+          currentLevel={this.state.currentLevel}
         />
         <View style={styles.footer} />
       </View>

@@ -138,15 +138,35 @@ export default class Board extends Component {
 
       // Check winning status
       if (this.colorEngine.checkSuccess()) {
-        Alert.alert(
-          'Win!',
-          'You win the game!',
-          [
-            {text: 'Next', onPress: () => this.props.handleGameWin()},
-            // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          ],
-          { cancelable: false }
-        )
+        if (this.props.currentLevel === 4) {
+          Alert.alert(
+            '卢灵熠小姐姐你怎么这么聪明！',
+            '这么可爱！哈哈哈哈哈哈哈哈',
+            [
+              {text: 'Next', onPress: () => {
+                Alert.alert(
+                  '你确定你不要再看一下了么',
+                  '哈哈哈哈哈哈哈哈',
+                  [
+                    {text: 'Next', onPress: () => this.props.handleGameWin()},
+                  ],
+                  { cancelable: false }
+                )
+              }},
+            ],
+            { cancelable: false }
+          )
+        } else {
+          Alert.alert(
+            'Win!',
+            'You win the game!',
+            [
+              {text: 'Next', onPress: () => this.props.handleGameWin()},
+              // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+            ],
+            { cancelable: false }
+          )
+        }
       }
     } else {
       // Reset the moved tile
@@ -182,7 +202,6 @@ export default class Board extends Component {
   }
 
   render() {
-    console.log("Render-Board");
     const tiles = this.state.colors.map((color, index) => {
       let top = Math.floor(index / this.width) * this.tileHeight;
       let left = (index % this.width) * this.tileWidth;

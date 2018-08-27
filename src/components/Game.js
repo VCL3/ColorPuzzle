@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   statTitle: {
     fontSize: 18,
     fontWeight: '500',
-    color: 'rgb(218, 119, 125)',
+    color: Utils.colors.themeDarkRed,
   },
   statNumber: {
     fontSize: 25,

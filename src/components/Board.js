@@ -172,7 +172,7 @@ export default class Board extends Component {
     incorrectTile.setNativeProps({
       style: {
         borderWidth: 3,
-        borderColor: 'rgb(218, 119, 125)',
+        borderColor: Utils.colors.themeDarkRed,
       },
     });
     // Wait for 1.5s

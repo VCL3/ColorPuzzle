@@ -68,6 +68,8 @@ const Utils = {
     themeUpperRight: 'rgb(255, 225, 168)',
     themeLowerLeft: 'rgb(255, 208, 122)',
     themeLowerRight: 'rgb(255, 196, 86)',
+    themeDarkBlue: 'rgb(83, 127, 160)',
+    themeDarkRed: 'rgb(218, 119, 125)',
   },
   isBorderTile: isBorderTile,
   isCrossTile: isCrossTile,

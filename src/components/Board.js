@@ -31,10 +31,14 @@ export default class Board extends Component {
     this.finalTop = 0;
     this.finalLeft = 0;
 
-    const upperLeft = tinycolor(colors[0]);
-    const upperRight = tinycolor(colors[1]);
-    const lowerLeft = tinycolor(colors[2]);
-    const lowerRight = tinycolor(colors[3]);
+    // const upperLeft = tinycolor(colors[0]);
+    // const upperRight = tinycolor(colors[1]);
+    // const lowerLeft = tinycolor(colors[2]);
+    // const lowerRight = tinycolor(colors[3]);
+    const upperLeft = colors[0];
+    const upperRight = colors[1];
+    const lowerLeft = colors[2];
+    const lowerRight = colors[3];
     this.colorEngine = new ColorEngine(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
 
     // this.customLayoutLinear = {
@@ -182,7 +186,6 @@ export default class Board extends Component {
   }
 
   render() {
-    console.log("Render-Board");
     const tiles = this.state.colors.map((color, index) => {
       let top = Math.floor(index / this.width) * this.tileHeight;
       let left = (index % this.width) * this.tileWidth;
@@ -195,7 +198,7 @@ export default class Board extends Component {
             ref={'tile' + index}
             style={[styles.tile, { width, height, top, left, backgroundColor: color.toRgbString() }]}
           >
-            <Text>X</Text>
+            <Text style={{ fontSize: 40 }}>·</Text>
           </View>
         )
       } else {

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Icon from 'react-native-vector-icons/Ionicons';
+import Swiper from 'react-native-swiper';
 import GridView from 'react-native-super-grid';
 import ColorEngine from '../engine/ColorEngine';
 import levelsConfig from '../config/LevelsConfig.json';
@@ -41,35 +42,41 @@ class Home extends Component {
             <Icon name="md-person" size={44} color={Utils.colors.themeLightBlack} />
           </TouchableOpacity>
         </View> 
-        <GridView
-          itemDimension={80}
-          items={levelsConfig}
-          style={styles.gameGrid}
-          renderItem={item => {
-            if (item.level > highestLevel) {
-              return (
-                <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
-                  <View style={{ flex: 1 }}>
-                    <Text style={[styles.gameLevel, { color: '#8C8A8F' }]}>{item.level}</Text>
+        <Swiper style={styles.wrapper} showsButtons={false}>
+          <View style={styles.slide1}>
+            <Text style={styles.text}>Hello Swiper</Text>
+          </View>
+
+          <GridView
+            itemDimension={80}
+            items={levelsConfig}
+            style={styles.gameGrid}
+            renderItem={item => {
+              if (item.level > highestLevel) {
+                return (
+                  <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.gameLevel, { color: '#8C8A8F' }]}>{item.level}</Text>
+                    </View>
                   </View>
-                </View>
-              )
-            } else {
-              return (
-                <View style={[styles.gameTile, { backgroundColor: tinycolor(item.colors[0]).toRgbString() }]}>
-                  <TouchableOpacity 
-                    onPress={() => this.props.navigation.navigate('Game', {
-                      currentLevel: item.level
-                    })}
-                    style={{ flex: 1 }}
-                  >
-                    <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
-                  </TouchableOpacity>
-                </View>
-              )
-            }
-          }}
-        />
+                )
+              } else {
+                return (
+                  <View style={[styles.gameTile, { backgroundColor: tinycolor(item.colors[0]).toRgbString() }]}>
+                    <TouchableOpacity 
+                      onPress={() => this.props.navigation.navigate('Game', {
+                        currentLevel: item.level
+                      })}
+                      style={{ flex: 1 }}
+                    >
+                      <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )
+              }
+            }}
+          />
+        </Swiper>
       </View>
     );
   }

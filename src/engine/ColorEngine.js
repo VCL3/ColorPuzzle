@@ -66,9 +66,29 @@ const randomizeTiles = function (colorArray, width, height) {
   return colorArray;
 }
 
+const randomNumberFromInterval = function(min,max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+const generateHSVColorGivenHue = function(hue) {
+  // Low saturation
+  const saturation = randomNumberFromInterval(20, 45);
+
+  // High brightness
+  const value = randomNumberFromInterval(80, 100);
+  return tinycolor({ h: hue, s: saturation, v: value });
+}
+
 export default class ColorEngine {
 
   constructor(width, height, upperLeft, upperRight, lowerLeft, lowerRight) {
+
+    colors = ColorEngine.generateColorPalette();
+    upperLeft = colors[0];
+    upperRight = colors[1];
+    lowerLeft = colors[2];
+    lowerRight = colors[3];
+
     this._colorArray = generateColorArray(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
     this.currentColorArray = randomizeTiles(this._colorArray.slice(), width, height);
     // Make sure start state is not success state
@@ -76,6 +96,16 @@ export default class ColorEngine {
       this.currentColorArray = randomizeTiles(this._colorArray.slice(), width, height);
     }
   };
+
+  static generateColorPalette() {
+    const colors = [];
+    // HSV
+    colors.push(generateHSVColorGivenHue(randomNumberFromInterval(0, 90)));
+    colors.push(generateHSVColorGivenHue(randomNumberFromInterval(90, 180)));
+    colors.push(generateHSVColorGivenHue(randomNumberFromInterval(180, 270)));
+    colors.push(generateHSVColorGivenHue(randomNumberFromInterval(270,360)));
+    return colors;
+  }
 
   getCorrectColorForIndex(index) {
     if (index < this._colorArray.length) {

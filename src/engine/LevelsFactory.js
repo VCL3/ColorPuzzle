@@ -1,4 +1,5 @@
 import levelsConfig from '../config/LevelsConfig.json';
+import ColorEngine from './ColorEngine';
 import tinycolor from 'tinycolor2';
 import Utils from '../utils/Utils';
 
@@ -15,19 +16,17 @@ export default class LevelsFactory {
       width = 1;
       height = 7;
     } else if (level == 2) {
-      width = 3;
-      height = 3;
-    } else if (level == 3) {
       width = 5;
       height = 5;
     } else {
       width = 7;
       height = 7;
     }
+
     return { 
       width: width, 
       height: height,
-      colors: levelConfig.colors
+      colors: ColorEngine.generateColorPalette(),
     }
   }
 

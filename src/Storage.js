@@ -72,3 +72,42 @@ export const storageSetHighestLevel = (highestLevel) => {
     expires: null,
   });
 }
+
+export const storageGetCustomLevel = (level) => {
+  storage.load({
+    key: 'customLevel' + level.toString(),
+    autoSync: true,
+    syncInBackground: true,
+    syncParams: {
+      extraFetchOptions: {
+      },
+    },
+  }).then(ret => {
+    store.dispatch({
+      type: 'SET_CUSTOM_LEVEL',
+      level: level,
+      colors: ret,
+    });
+    return ret;
+  }).catch(err => {
+    //如果没有找到数据且没有sync方法，
+    //或者有其他异常，则在catch中返回
+    console.warn(err.message);
+    switch (err.name) {
+      case 'NotFoundError':
+        // TODO;
+        break;
+      case 'ExpiredError':
+        // TODO
+          break;
+    }
+  })
+}
+
+export const storageSetCustomLevel = (level, colors) => {
+  storage.save({
+    key: 'customLevel' + level.toString(),
+    data: colors,
+    expires: null,
+  });
+}

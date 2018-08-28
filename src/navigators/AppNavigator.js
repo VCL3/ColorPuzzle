@@ -8,6 +8,7 @@ import {
 } from 'react-navigation-redux-helpers';
 import Home from '../components/Home';
 import Profile from '../components/Profile';
+import NewPuzzle from '../components/NewPuzzle';
 import Game from '../components/Game';
 import Utils from '../utils/Utils';
 
@@ -23,7 +24,10 @@ const MainNavigator = createStackNavigator(
     },
     Profile: {
       screen: Profile
-    }
+    },
+    NewPuzzle: {
+      screen: NewPuzzle
+    },
   },
   {
     initialRouteName: 'Home',

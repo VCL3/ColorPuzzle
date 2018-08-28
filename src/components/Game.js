@@ -5,6 +5,7 @@ import { getStatusBarHeight } from 'react-native-status-bar-height';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LevelsFactory from '../engine/LevelsFactory';
 import Board from './Board';
+import { AdMobBanner, AdMobInterstitial, PublisherBanner, AdMobRewarded } from 'react-native-admob';
 import { storageSetHighestLevel } from '../Storage';
 import PropTypes from 'prop-types';
 import Utils from '../utils/Utils';
@@ -75,7 +76,14 @@ class Game extends Component {
           addMove={addMove}
           handleGameWin={this.handleGameWin}
         />
-        <View style={styles.footer} />
+        <View style={styles.footer}>
+          {/* <AdMobBanner
+            adSize="smartBannerPortrait"
+            adUnitID='ca-app-pub-9552882899926144/7310628905'
+            testDevices={[AdMobBanner.simulatorId]}
+            onAdFailedToLoad={error => console.error(error)}
+          /> */}
+        </View>
       </View>
     );
   }

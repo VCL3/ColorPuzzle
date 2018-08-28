@@ -97,11 +97,40 @@ class Home extends Component {
               <Icon name="ios-arrow-dropleft" size={18} color={Utils.colors.themeDarkBlue} />
               <Text style={[styles.swiperItemTitle, { paddingLeft: 5 }]}>Creative Mode</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity style={{ paddingTop: 10 }} onPress={() => this.props.navigation.navigate('NewPuzzle')}>
               <View style={styles.largeButton}>
                 <Text style={{ fontSize: 20 }}>Create New Puzzle</Text>
               </View>
             </TouchableOpacity>
+            <GridView
+              itemDimension={80}
+              items={levelsConfig}
+              style={styles.gameGrid}
+              renderItem={item => {
+                if (item.level > highestLevel) {
+                  return (
+                    <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
+                      <View style={{ flex: 1 }}>
+                        <Text style={[styles.gameLevel, { color: '#8C8A8F' }]}>{item.level}</Text>
+                      </View>
+                    </View>
+                  )
+                } else {
+                  return (
+                    <View style={[styles.gameTile, { backgroundColor: tinycolor(item.colors[0]).toRgbString() }]}>
+                      <TouchableOpacity 
+                        onPress={() => this.props.navigation.navigate('Game', {
+                          currentLevel: item.level
+                        })}
+                        style={{ flex: 1 }}
+                      >
+                        <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )
+                }
+              }}
+            />
           </View>
         </Swiper>
       </View>

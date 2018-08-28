@@ -25,9 +25,6 @@ const MainNavigator = createStackNavigator(
     Profile: {
       screen: Profile
     },
-    NewPuzzle: {
-      screen: NewPuzzle
-    },
   },
   {
     initialRouteName: 'Home',
@@ -51,6 +48,9 @@ const RootNavigator = createStackNavigator(
     },
     Game: {
       screen: Game,
+    },
+    NewPuzzle: {
+      screen: NewPuzzle
     },
   },
   {

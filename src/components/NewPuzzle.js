@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { getStatusBarHeight } from 'react-native-status-bar-height';
-import GridView from 'react-native-super-grid';
+import { Header } from 'react-navigation';
+import { SlidersColorPicker } from 'react-native-color';
 import Board from './Board';
-import { storageGetCustomLevel, storageSetCustomLevel } from '../Storage';
+import { storageGetCustomLevel, storageSetCustomLevels, storageSetHighestLevel } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,47 +15,83 @@ class NewPuzzle extends Component {
     super(props);
     this.state = {
       colors: ["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"],
+      recents: ['#247ba0', '#70c1b3', '#b2dbbf', '#f3ffbd', '#ff1654'],
       colorSquareSelected: false,
     }
   }
 
   render() {
 
-    const { gameMoves, addMove } = this.props;
+    const { setCustomLevels, addMove, clearMove } = this.props;
 
     return (
-      <View style={styles.home}>
+      <View style={{ flex: 1 }}>
         <View style={styles.header}>
-          <GridView
-            itemDimension={20}
-            items={this.state.colors}
-            style={styles.gameGrid}
-            renderItem={item => {
-              console.log(item);
-              <TouchableOpacity onPress={() => {}}>
-                <View styles={[styles.gameTile, { backgroundColor: 'red' }]}></View>
-              </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              clearMove();
+              this.props.navigation.goBack();
             }}
-          />
-          {/* <View style={styles.colorColumn}>
-            <View style={styles.colorRow}>
-              <TouchableOpacity onPress={() => {}}>
-                <View styles={styles.colorSquare}></View>
-              </TouchableOpacity>
-
-            </View>
-            <View style={styles.colorRow}>
-              <TouchableOpacity onPress={() => {}} />
-              <TouchableOpacity onPress={() => {}} />
-            </View>
-          </View> */}
-          <TouchableOpacity onPress={() => {}}>
-            <View style={styles.largeButton}>
-              <Text style={{ fontSize: 20 }}>Save</Text>
-            </View>
+          >
+            <Icon name='ios-arrow-back' size={44} color={Utils.colors.themeLightBlack} />
           </TouchableOpacity>
+          <View style={styles.statContainer}>
+            <Text style={styles.statTitle}>SIZE</Text>
+            <Text style={styles.statNumber}>7</Text>
+          </View>
+          <View style={styles.colorColumn}>
+            <View style={styles.colorRow}>              
+              <TouchableOpacity onPress={() => { this.setState({ colorSquareSelected: 0 }) }}>
+                <View style={[styles.colorSquare, { backgroundColor: Utils.formatRgbColor(this.state.colors[0]) }]} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { this.setState({ colorSquareSelected: 1 }) }}>
+                <View style={[styles.colorSquare, { backgroundColor: Utils.formatRgbColor(this.state.colors[1]) }]} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.colorRow}>
+              <TouchableOpacity onPress={() => { this.setState({ colorSquareSelected: 2 }) }}>
+                <View style={[styles.colorSquare, { backgroundColor: Utils.formatRgbColor(this.state.colors[2]) }]} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => { this.setState({ colorSquareSelected: 3 }) }}>
+                <View style={[styles.colorSquare, { backgroundColor: Utils.formatRgbColor(this.state.colors[3]) }]} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.statContainer}>
+            <Text style={styles.statTitle}>SAVE</Text>
+            <TouchableOpacity onPress={() => {
+              setCustomLevels();
+              storageSetCustomLevels();  
+            }}>
+              <Icon name='ios-checkmark-circle-outline' size={28} color={Utils.colors.themeLightBlack} />
+            </TouchableOpacity>
+          </View>
         </View>
-        { this.state.colorSquareSelected && (<Text>Hello</Text>) }
+        { (this.state.colorSquareSelected !== false) &&  
+          (<SlidersColorPicker
+            visible={this.state.colorSquareSelected !== false}
+            color={tinycolor(this.state.colors[this.state.colorSquareSelected])}
+            returnMode={'rgb'}
+            onCancel={() => this.setState({ colorSquareSelected: false })}
+            onOk={color => {
+              rgbColor = Utils.revertRgbColor(color);
+              colorsCopy = this.state.colors.slice();
+              colorsCopy[colorsCopy.indexOf(this.state.colors[this.state.colorSquareSelected])] = rgbColor;
+              this.setState({
+                colorSquareSelected: false,
+                colors: colorsCopy,
+                recents: [
+                  tinycolor(color).toHexString(),
+                  ...this.state.recents.filter(c => c !== tinycolor(color).toHexString()).slice(0, 4)
+                ]
+              });
+            }}
+            swatches={this.state.recents}
+            swatchesLabel="RECENTS"
+            okLabel="Done"
+            cancelLabel="Cancel"
+          />)
+        }
         <Board
           ref={instance => { this.board = instance; }}
           headerHeight={HEADER_HEIGHT}
@@ -75,14 +111,16 @@ function mapStateToProps(state, props) {
   return {
     highestLevel: state.gameReducer.highestLevel,
     gameMoves: state.gameReducer.gameMoves,
+    customLevels: state.gameReducer.customLevels,
   }
 }
 
 function mapDispatchToProps(dispatch, props) {
   return {
-    addHighestLevel: () => {
+    setCustomLevels: (customLevels) => {
       dispatch({
-        type: 'ADD_HIGHEST_LEVEL',
+        type: 'SET_CUSTOM_LEVELS',
+        customLevels: customLevels,
       });
     },
     addMove: () => {
@@ -101,51 +139,59 @@ function mapDispatchToProps(dispatch, props) {
 export default connect(mapStateToProps, mapDispatchToProps)(NewPuzzle);
 
 const screenLessBoardHeight = Utils.size.height - Utils.size.width * Utils.widthHeightRatio;
-if (screenLessBoardHeight / 2 < 150) {
-  HEADER_HEIGHT = 150;
+if (screenLessBoardHeight / 2 < 200) {
+  HEADER_HEIGHT = 200;
 } else {
-  HEADER_HEIGHT = screenLessBoardHeight / 2;
+  HEADER_HEIGHT = screenLessBoardHeight / 2 + 50;
 }
 const styles = StyleSheet.create({
-  home: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: Utils.colors.themeBackgroundColor,
-  },
   header: {
     height: HEADER_HEIGHT,
     flexDirection: 'row',
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: getStatusBarHeight(),
+    paddingTop: Utils.size.statusBarHeight,
     paddingLeft: 30,
     paddingRight: 30,
     backgroundColor: Utils.colors.themeBackgroundColor,
   },
-  gameGrid: {
-    width: 80,
-    height: 100,
-    backgroundColor: Utils.colors.themeLightGrey
+  statContainer: {
+    height: 70,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    alignItems: "center",
   },
-  gameTile: {
-    justifyContent: 'flex-end',
-    borderRadius: 5,
-    padding: 5,
-    height: 80,
+  statTitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: Utils.colors.themeDarkRed,
+  },
+  statNumber: {
+    fontSize: 25,
+    color: Utils.colors.themeLightBlack,
   },
   colorColumn: {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    // borderLeftWidth: 2,
+    // borderRightWidth: 2,
+    // borderTopWidth: 2,
+    // borderBottomWidth: 2,
+    borderColor: Utils.colors.themeDarkGrey,
   },
   colorRow: {
+    width: 100,
+    height: 50,
+    padding: 5,
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   colorSquare: {
-
+    width: 42,
+    height: 42,
+    borderRadius: 5,
   },
   footer: {
     height: Utils.size.height - HEADER_HEIGHT - Utils.size.width * Utils.widthHeightRatio,

@@ -36,7 +36,6 @@ const Utils = {
     statusBarHeight: getStatusBarHeight(),
   },
   getOrientation: getOrientation, 
-  tileCount: 7,
   widthHeightRatio: 1.2,
   post(url, data, callback) {
     const fetchOptions = {
@@ -73,6 +72,15 @@ const Utils = {
   },
   isBorderTile: isBorderTile,
   isCrossTile: isCrossTile,
+  formatRgbColor: function(rgbColor) {
+    const res = rgbColor.split(' ');
+    return 'rgb(' + res[1] + ',' + res[2] + ',' + res[3] + ')';
+  },
+  revertRgbColor: function(rgbColorString) {
+    const rgbPart = rgbColorString.substring(4, rgbColorString.length - 1);
+    const res = rgbPart.split(', ');
+    return 'rgb ' + res[0] + ' ' + res[1] + ' ' + res[2];
+  },
 };
 
 export default Utils;

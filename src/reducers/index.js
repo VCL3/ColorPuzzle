@@ -4,6 +4,7 @@ import { getHighestLevel } from '../Storage';
 const defaultState = {
   highestLevel: 1,
   gameMoves: 0,
+  customLevels: [],
 };
 
 const gameReducer = (state = defaultState, action) => {
@@ -23,6 +24,10 @@ const gameReducer = (state = defaultState, action) => {
     case 'CLEAR_GAME_MOVE':
       return Object.assign({}, state, { 
         gameMoves: 0,
+      });
+    case 'SET_CUSTOM_LEVELS':
+      return Object.assign({}, state, { 
+        customLevels: action.customLevels,
       });
     default: 
       return state;

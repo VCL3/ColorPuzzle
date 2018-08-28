@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: "space-between",
     alignItems: "center",
-    paddingTop: getStatusBarHeight(),
+    paddingTop: Utils.size.statusBarHeight,
     paddingLeft: 30,
     paddingRight: 30,
     backgroundColor: Utils.colors.themeBackgroundColor,

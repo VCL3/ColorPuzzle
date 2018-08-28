@@ -27,10 +27,11 @@ class Home extends Component {
 
   componentWillMount() {
     storageGetHighestLevel();
+    storageLoadCustomLevels();
   }
 
   render() {
-    const { highestLevel } = this.props;
+    const { highestLevel, customLevels } = this.props;
 
     let titleWord;
     if (this.state.pagination === 0) {
@@ -77,7 +78,7 @@ class Home extends Component {
                   )
                 } else {
                   return (
-                    <View style={[styles.gameTile, { backgroundColor: tinycolor(item.colors[0]).toRgbString() }]}>
+                    <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
                       <TouchableOpacity 
                         onPress={() => this.props.navigation.navigate('Game', {
                           currentLevel: item.level
@@ -104,31 +105,21 @@ class Home extends Component {
             </TouchableOpacity>
             <GridView
               itemDimension={80}
-              items={levelsConfig}
+              items={customLevels}
               style={styles.gameGrid}
               renderItem={item => {
-                if (item.level > highestLevel) {
-                  return (
-                    <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
-                      <View style={{ flex: 1 }}>
-                        <Text style={[styles.gameLevel, { color: '#8C8A8F' }]}>{item.level}</Text>
-                      </View>
-                    </View>
-                  )
-                } else {
-                  return (
-                    <View style={[styles.gameTile, { backgroundColor: tinycolor(item.colors[0]).toRgbString() }]}>
-                      <TouchableOpacity 
-                        onPress={() => this.props.navigation.navigate('Game', {
-                          currentLevel: item.level
-                        })}
-                        style={{ flex: 1 }}
-                      >
-                        <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  )
-                }
+                return (
+                  <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
+                    <TouchableOpacity 
+                      onPress={() => this.props.navigation.navigate('Game', {
+                        currentLevel: item.level
+                      })}
+                      style={{ flex: 1 }}
+                    >
+                      <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                    </TouchableOpacity>
+                  </View>
+                )
               }}
             />
           </View>
@@ -142,6 +133,7 @@ function mapStateToProps(state, props) {
   return {
     highestLevel: state.gameReducer.highestLevel,
     gameLevel: state.gameReducer.gameLevel,
+    customLevels: state.gameReducer.customLevels,
   }
 }
 

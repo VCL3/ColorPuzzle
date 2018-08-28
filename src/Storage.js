@@ -73,9 +73,9 @@ export const storageSetHighestLevel = (highestLevel) => {
   });
 }
 
-export const storageGetCustomLevel = (level) => {
+export const storageLoadCustomLevels = () => {
   storage.load({
-    key: 'customLevel' + level.toString(),
+    key: 'customLevels',
     autoSync: true,
     syncInBackground: true,
     syncParams: {
@@ -84,9 +84,8 @@ export const storageGetCustomLevel = (level) => {
     },
   }).then(ret => {
     store.dispatch({
-      type: 'SET_CUSTOM_LEVEL',
-      level: level,
-      colors: ret,
+      type: 'SET_CUSTOM_LEVELS',
+      customLevels: ret,
     });
     return ret;
   }).catch(err => {
@@ -104,10 +103,10 @@ export const storageGetCustomLevel = (level) => {
   })
 }
 
-export const storageSetCustomLevel = (level, colors) => {
+export const storageSetCustomLevels = (levels) => {
   storage.save({
-    key: 'customLevel' + level.toString(),
-    data: colors,
+    key: 'customLevels',
+    data: levels,
     expires: null,
   });
 }

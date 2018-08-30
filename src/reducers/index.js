@@ -4,7 +4,24 @@ import { getHighestLevel } from '../Storage';
 const defaultState = {
   highestLevel: 1,
   gameMoves: 0,
-  customLevels: [],
+  customLevels: [
+  {
+    "level":1,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":2,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":3,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":4,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  ],
 };
 
 const gameReducer = (state = defaultState, action) => {

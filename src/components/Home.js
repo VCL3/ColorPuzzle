@@ -7,7 +7,7 @@ import Swiper from 'react-native-swiper';
 import GridView from 'react-native-super-grid';
 import ColorEngine from '../engine/ColorEngine';
 import levelsConfig from '../config/LevelsConfig.json';
-import { storageGetHighestLevel, storageSetHighestLevel } from '../Storage';
+import { storageGetHighestLevel, storageGetCustomLevels } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 
@@ -21,17 +21,33 @@ class Home extends Component {
     super(props);
     this.colorEngine = new ColorEngine(4, 9, tinycolor(Utils.colors.themeUpperLeft), tinycolor(Utils.colors.themeUpperRight), tinycolor(Utils.colors.themeLowerLeft), tinycolor(Utils.colors.themeLowerRight));
     this.state = {
-      pagination: 0
+      pagination: 0,
     }
+
+    console.log(levelsConfig);
   }
 
   componentWillMount() {
     storageGetHighestLevel();
-    storageLoadCustomLevels();
+    storageGetCustomLevels();
   }
 
+  componentWillReceiveProps(nextProps) {
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log("SHOULD UPDATE");
+  //   console.log(nextProps.customLevels);
+  //   if (nextProps.customLevels !== this.props.customLevels) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   render() {
+    console.log('HOME-RENDER');
     const { highestLevel, customLevels } = this.props;
+    console.log(customLevels);
 
     let titleWord;
     if (this.state.pagination === 0) {
@@ -98,25 +114,26 @@ class Home extends Component {
               <Icon name="ios-arrow-dropleft" size={18} color={Utils.colors.themeDarkBlue} />
               <Text style={[styles.swiperItemTitle, { paddingLeft: 5 }]}>Creative Mode</Text>
             </View>
-            <TouchableOpacity style={{ paddingTop: 10 }} onPress={() => this.props.navigation.navigate('NewPuzzle')}>
-              <View style={styles.largeButton}>
-                <Text style={{ fontSize: 20 }}>Create New Puzzle</Text>
-              </View>
-            </TouchableOpacity>
             <GridView
               itemDimension={80}
               items={customLevels}
               style={styles.gameGrid}
               renderItem={item => {
+                let newLevelButton;
+                if (item.level === customLevels.length) {
+                  newLevelButton = <Text style={[styles.gameLevel, { color: '#fff', }]}>New</Text>
+                } else {
+                  newLevelButton = <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                }
                 return (
                   <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
                     <TouchableOpacity 
-                      onPress={() => this.props.navigation.navigate('Game', {
-                        currentLevel: item.level
+                      onPress={() => this.props.navigation.navigate('NewPuzzle', {
+                        selectedLevel: item.level
                       })}
                       style={{ flex: 1 }}
                     >
-                      <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                      {newLevelButton}
                     </TouchableOpacity>
                   </View>
                 )

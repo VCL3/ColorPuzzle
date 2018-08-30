@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
 import GridView from 'react-native-super-grid';
-import { storageGetHighestLevel, storageSetHighestLevel } from '../Storage';
+import { storageGetHighestLevel, storageSetHighestLevel, storageSetCustomLevels } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 
@@ -24,6 +24,10 @@ class Profile extends Component {
           onPress={() => {
             setHighestLevel(1);
             storageSetHighestLevel(1);
+            storageSetCustomLevels([{
+              "level": 1,
+              "colors": ["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+            }]);
           }}
         >
           <Text>Reset All Levels</Text>

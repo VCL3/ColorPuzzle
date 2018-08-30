@@ -28,7 +28,16 @@ const storage = new Storage({
         key: 'highestLevel',
         data: 1,
       }
-    )}
+    )},
+    customLevels() {
+      storage.save({
+        key: 'customLevels',
+        data: [{
+          "level":1,
+          "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+        }],
+      }
+    )},    
   }
 })
 
@@ -73,7 +82,7 @@ export const storageSetHighestLevel = (highestLevel) => {
   });
 }
 
-export const storageLoadCustomLevels = () => {
+export const storageGetCustomLevels = () => {
   storage.load({
     key: 'customLevels',
     autoSync: true,

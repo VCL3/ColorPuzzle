@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { Header } from 'react-navigation';
 import { SlidersColorPicker } from 'react-native-color';
 import Board from './Board';
-import { storageGetCustomLevel, storageSetCustomLevels, storageSetHighestLevel } from '../Storage';
+import { storageSetCustomLevels } from '../Storage';
 import Utils from '../utils/Utils';
 import tinycolor from 'tinycolor2';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -13,8 +12,10 @@ class NewPuzzle extends Component {
 
   constructor(props) {
     super(props);
+    const selectedLevel = this.props.navigation.getParam('selectedLevel', null);
     this.state = {
-      colors: ["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"],
+      selectedLevel: selectedLevel,
+      colors: this.props.customLevels[selectedLevel - 1].colors,
       recents: ['#247ba0', '#70c1b3', '#b2dbbf', '#f3ffbd', '#ff1654'],
       colorSquareSelected: false,
     }
@@ -22,7 +23,7 @@ class NewPuzzle extends Component {
 
   render() {
 
-    const { setCustomLevels, addMove, clearMove } = this.props;
+    const { customLevels, setCustomLevels, addMove, clearMove } = this.props;
 
     return (
       <View style={{ flex: 1 }}>
@@ -60,8 +61,19 @@ class NewPuzzle extends Component {
           <View style={styles.statContainer}>
             <Text style={styles.statTitle}>SAVE</Text>
             <TouchableOpacity onPress={() => {
-              setCustomLevels();
-              storageSetCustomLevels();  
+              newLevels = customLevels.slice();
+              newLevels[this.state.selectedLevel - 1] = {
+                level: this.state.selectedLevel,
+                colors: this.state.colors.slice(),
+              };
+              if (this.state.selectedLevel === customLevels.length) {
+                newLevels.push({
+                  "level": customLevels.length + 1,
+                  "colors": ["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"],
+                });
+              }
+              setCustomLevels(newLevels);
+              storageSetCustomLevels(newLevels);  
             }}>
               <Icon name='ios-checkmark-circle-outline' size={28} color={Utils.colors.themeLightBlack} />
             </TouchableOpacity>
@@ -76,14 +88,14 @@ class NewPuzzle extends Component {
             onOk={color => {
               rgbColor = Utils.revertRgbColor(color);
               colorsCopy = this.state.colors.slice();
-              colorsCopy[colorsCopy.indexOf(this.state.colors[this.state.colorSquareSelected])] = rgbColor;
+              colorsCopy[colorsCopy.indexOf(this.state.colors[this.state.colorSquareSelected])] = rgbColor;   
               this.setState({
                 colorSquareSelected: false,
                 colors: colorsCopy,
                 recents: [
                   tinycolor(color).toHexString(),
                   ...this.state.recents.filter(c => c !== tinycolor(color).toHexString()).slice(0, 4)
-                ]
+                ],
               });
             }}
             swatches={this.state.recents}

@@ -33,9 +33,10 @@ const MainNavigator = createStackNavigator(
         backgroundColor: Utils.colors.themeBackgroundColor,
         borderBottomWidth: 0,
       },
-      headerTintColor: '#fff',
+      headerTintColor: Utils.colors.themeDarkBlack,
       headerTitleStyle: {
         fontWeight: 'bold',
+        fontSize: 24,
       },
     }
   }

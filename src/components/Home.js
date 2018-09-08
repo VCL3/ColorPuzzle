@@ -23,8 +23,6 @@ class Home extends Component {
     this.state = {
       pagination: 0,
     }
-
-    console.log(levelsConfig);
   }
 
   componentWillMount() {
@@ -32,22 +30,9 @@ class Home extends Component {
     storageGetCustomLevels();
   }
 
-  componentWillReceiveProps(nextProps) {
-  }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log("SHOULD UPDATE");
-  //   console.log(nextProps.customLevels);
-  //   if (nextProps.customLevels !== this.props.customLevels) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
   render() {
-    console.log('HOME-RENDER');
+
     const { highestLevel, customLevels } = this.props;
-    console.log(customLevels);
 
     let titleWord;
     if (this.state.pagination === 0) {
@@ -64,7 +49,7 @@ class Home extends Component {
             {titleWord}
           </View>
           <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
-            <Icon name="md-person" size={40} color={Utils.colors.themeLightBlack} />
+            <Icon name="md-person" size={40} color={Utils.colors.themeDarkBlack} />
           </TouchableOpacity>
         </View>
         <Swiper 
@@ -72,7 +57,7 @@ class Home extends Component {
           loop={false} 
           showsPagination={true}
           paginationStyle={styles.swiperDots}
-          activeDotColor={Utils.colors.themeDarkBlue}
+          activeDotColor={Utils.colors.themeLightBlack}
           onIndexChanged={(index) => this.setState({ pagination: index })}>
           <View style={styles.swiperItem}>
             <View style={styles.swiperItemTitleComp}>
@@ -88,7 +73,7 @@ class Home extends Component {
                   return (
                     <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
                       <View style={{ flex: 1 }}>
-                        <Text style={[styles.gameLevel, { color: '#8C8A8F' }]}>{item.level}</Text>
+                        <Text style={[styles.gameLevel, { color: Utils.colors.themeBrown }]}>{item.level}</Text>
                       </View>
                     </View>
                   )
@@ -101,7 +86,7 @@ class Home extends Component {
                         })}
                         style={{ flex: 1 }}
                       >
-                        <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                        <Text style={[styles.gameLevel, { color: '#FFFFFF', }]}>{item.level}</Text>
                       </TouchableOpacity>
                     </View>
                   )
@@ -121,9 +106,9 @@ class Home extends Component {
               renderItem={item => {
                 let newLevelButton;
                 if (item.level === customLevels.length) {
-                  newLevelButton = <Text style={[styles.gameLevel, { color: '#fff', }]}>New</Text>
+                  newLevelButton = <Text style={[styles.gameLevel, { color: '#FFFFFF', }]}>New</Text>
                 } else {
-                  newLevelButton = <Text style={[styles.gameLevel, { color: '#fff', }]}>{item.level}</Text>
+                  newLevelButton = <Text style={[styles.gameLevel, { color: '#FFFFFF', }]}>{item.level}</Text>
                 }
                 return (
                   <View style={[styles.gameTile, { backgroundColor: this.colorEngine.getCorrectColorForIndex(item.level - 1) }]}>
@@ -149,7 +134,6 @@ class Home extends Component {
 function mapStateToProps(state, props) {
   return {
     highestLevel: state.gameReducer.highestLevel,
-    gameLevel: state.gameReducer.gameLevel,
     customLevels: state.gameReducer.customLevels,
   }
 }
@@ -190,6 +174,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
   },
   highestLevel: {
+    color: Utils.colors.themeDarkBlack,
     fontSize: 20,
     fontWeight: '600',
   },
@@ -211,7 +196,7 @@ const styles = StyleSheet.create({
   swiperItemTitle: {
     fontSize: 20,
     fontWeight: '400',
-    color: Utils.colors.themeDarkBlue,
+    color: Utils.colors.themeLightBlack,
   },
   gameGrid: {
     flex: 1,

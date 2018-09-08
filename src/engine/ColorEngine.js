@@ -82,13 +82,6 @@ const generateHSVColorGivenHue = function(hue) {
 export default class ColorEngine {
 
   constructor(width, height, upperLeft, upperRight, lowerLeft, lowerRight) {
-
-    colors = ColorEngine.generateColorPalette();
-    upperLeft = colors[0];
-    upperRight = colors[1];
-    lowerLeft = colors[2];
-    lowerRight = colors[3];
-
     this._colorArray = generateColorArray(width, height, upperLeft, upperRight, lowerLeft, lowerRight);
     this.currentColorArray = randomizeTiles(this._colorArray.slice(), width, height);
     // Make sure start state is not success state
@@ -105,6 +98,15 @@ export default class ColorEngine {
     colors.push(generateHSVColorGivenHue(randomNumberFromInterval(180, 270)));
     colors.push(generateHSVColorGivenHue(randomNumberFromInterval(270,360)));
     return colors;
+  }
+
+  static equalColorArrays(arrayOld, arrayNew) {
+    for (let i = 0; i < arrayOld.length; i++) {
+      if (!tinycolor.equals(arrayOld[i], arrayNew[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   getCorrectColorForIndex(index) {

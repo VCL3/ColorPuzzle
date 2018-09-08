@@ -22,15 +22,12 @@ class NewPuzzle extends Component {
   }
 
   render() {
-
-    const { customLevels, setCustomLevels, addMove, clearMove } = this.props;
-
+    const { customLevels, setCustomLevels } = this.props;
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.header}>
           <TouchableOpacity 
             onPress={() => {
-              clearMove();
               this.props.navigation.goBack();
             }}
           >
@@ -109,9 +106,9 @@ class NewPuzzle extends Component {
           headerHeight={HEADER_HEIGHT}
           width={7}
           height={7}
-          colors={this.state.colors}
-          addMove={addMove}
-          handleGameWin={this.handleGameWin}
+          colors={this.state.colors.map((color) => (tinycolor(color)))}
+          addMove={() => {}}
+          handleGameWin={() => {}}
         />
         <View style={styles.footer} />
       </View>
@@ -121,8 +118,6 @@ class NewPuzzle extends Component {
 
 function mapStateToProps(state, props) {
   return {
-    highestLevel: state.gameReducer.highestLevel,
-    gameMoves: state.gameReducer.gameMoves,
     customLevels: state.gameReducer.customLevels,
   }
 }
@@ -133,11 +128,6 @@ function mapDispatchToProps(dispatch, props) {
       dispatch({
         type: 'SET_CUSTOM_LEVELS',
         customLevels: customLevels,
-      });
-    },
-    addMove: () => {
-      dispatch({
-        type: 'ADD_GAME_MOVE',
       });
     },
     clearMove: () => {

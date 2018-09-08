@@ -56,19 +56,16 @@ const Utils = {
     });
   },
   colors: {
-    themeBackgroundColor: 'rgb(235, 214, 174)',
+    themeBackgroundColor: '#FFE8D1',
     themeShadeColor: 'rgb(240, 224, 194)',
-    themeIconColor: 'rgb()',
     themeDarkBlack: 'rgb(51, 51, 51)',
     themeLightBlack: 'rgb(102, 102, 102)',
-    themeDarkGrey: 'rgb(153, 153, 153)',
-    themeLightGrey: 'rgb(204, 204, 204)',
-    themeUpperLeft: 'rgb(235, 214, 174)',
-    themeUpperRight: 'rgb(255, 225, 168)',
-    themeLowerLeft: 'rgb(255, 208, 122)',
-    themeLowerRight: 'rgb(255, 196, 86)',
-    themeDarkBlue: 'rgb(83, 127, 160)',
-    themeDarkRed: 'rgb(218, 119, 125)',
+    themeUpperLeft: '#F25F5C',
+    themeUpperRight: '#FFE066',
+    themeLowerLeft: '#247BA0',
+    themeLowerRight: '#70C1B3',
+    themeBrown: '#50514F',
+    themeDarkRed: '#F25F5C',
   },
   isBorderTile: isBorderTile,
   isCrossTile: isCrossTile,
@@ -81,6 +78,22 @@ const Utils = {
     const res = rgbPart.split(', ');
     return 'rgb ' + res[0] + ' ' + res[1] + ' ' + res[2];
   },
+  defaultCustomLevels: [{
+    "level":1,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":2,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":3,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  },
+  {
+    "level":4,
+    "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
+  }],
 };
 
 export default Utils;

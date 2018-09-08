@@ -31,10 +31,6 @@ export default class Board extends Component {
     this.finalTop = 0;
     this.finalLeft = 0;
 
-    // const upperLeft = tinycolor(colors[0]);
-    // const upperRight = tinycolor(colors[1]);
-    // const lowerLeft = tinycolor(colors[2]);
-    // const lowerRight = tinycolor(colors[3]);
     const upperLeft = colors[0];
     const upperRight = colors[1];
     const lowerLeft = colors[2];
@@ -55,6 +51,15 @@ export default class Board extends Component {
     this.state = {
       colors: this.colorEngine.currentColorArray,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!ColorEngine.equalColorArrays(this.props.colors, nextProps.colors)) {
+      this.colorEngine = new ColorEngine(this.width, this.height, nextProps.colors[0], nextProps.colors[1], nextProps.colors[2], nextProps.colors[3]);
+      this.setState({
+        colors: this.colorEngine.currentColorArray,
+      });
+    }
   }
 
   componentWillMount() {
@@ -120,7 +125,7 @@ export default class Board extends Component {
       this.finalIndex = this.calculateIndexWithTopAndLeft(this.finalTopIndex, this.finalLeftIndex);
 
       // If valid move, swap selected tiles and rerender the board
-      if (!(Utils.isBorderTile(this.finalIndex, this.width, this.height) || Utils.isCrossTile(this.finalIndex))) {
+      if ((this.finalIndex !== this.index) && !(Utils.isBorderTile(this.finalIndex, this.width, this.height) || Utils.isCrossTile(this.finalIndex, this.width, this.height))) {
         this.colorEngine.currentColorArray[this.index] = this.colorEngine.currentColorArray.splice(this.finalIndex, 1, this.colorEngine.currentColorArray[this.index])[0];
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         this.setState({
@@ -144,7 +149,7 @@ export default class Board extends Component {
       if (this.colorEngine.checkSuccess()) {
         Alert.alert(
           'Win!',
-          'You win the game!',
+          'The Puzzle Is Complete!',
           [
             {text: 'Next', onPress: () => this.props.handleGameWin()},
             // {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},

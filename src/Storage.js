@@ -1,6 +1,7 @@
 import Storage from 'react-native-storage';
 import { AsyncStorage } from 'react-native';
 import { store } from '../App';
+import Utils from '../src/utils/Utils';
 
 const storage = new Storage({
   // 最大容量，默认值1000条数据循环存储
@@ -32,10 +33,7 @@ const storage = new Storage({
     customLevels() {
       storage.save({
         key: 'customLevels',
-        data: [{
-          "level":1,
-          "colors":["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
-        }],
+        data: Utils.defaultCustomLevels,
       }
     )},    
   }

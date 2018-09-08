@@ -11,6 +11,13 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 class Profile extends Component {
 
+  static navigationOptions = { 
+    title: 'Settings',
+    headerStyle: {
+      backgroundColor: Utils.colors.themeBackgroundColor,
+    },
+  };
+
   constructor(props) {
     super(props);
   }
@@ -21,13 +28,19 @@ class Profile extends Component {
     return (
       <View style={styles.home}>
         <TouchableOpacity 
+          style={styles.button}
+          onPress={() => {
+            console.log("Contact Us");
+          }}
+        >
+          <Text>Contact Us</Text>
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.button}
           onPress={() => {
             setHighestLevel(1);
             storageSetHighestLevel(1);
-            storageSetCustomLevels([{
-              "level": 1,
-              "colors": ["rgb 188 69 68", "rgb 89 175 241", "rgb 242 196 108", "rgb 243 243 243"]
-            }]);
+            storageSetCustomLevels(Utils.defaultCustomLevels);
           }}
         >
           <Text>Reset All Levels</Text>
@@ -64,4 +77,12 @@ const styles = StyleSheet.create({
     paddingTop: getStatusBarHeight(),
     backgroundColor: Utils.colors.themeBackgroundColor,
   },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 350,
+    height: 50,
+    margin: 10,
+    backgroundColor: Utils.colors.themeDarkRed
+  }
 });

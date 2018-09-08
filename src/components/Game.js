@@ -9,6 +9,7 @@ import { AdMobBanner, AdMobInterstitial, PublisherBanner, AdMobRewarded } from '
 import { storageSetHighestLevel } from '../Storage';
 import PropTypes from 'prop-types';
 import Utils from '../utils/Utils';
+import tinycolor from 'tinycolor2';
 
 class Game extends Component {
 
@@ -72,7 +73,7 @@ class Game extends Component {
           headerHeight={HEADER_HEIGHT}
           width={width}
           height={height}
-          colors={colors}
+          colors={colors.map((color) => (tinycolor(color)))}
           addMove={addMove}
           handleGameWin={this.handleGameWin}
         />
